@@ -1,0 +1,10 @@
+[
+  {
+    "name": "Giá tăng dần",
+    "value": "priceAsc"
+  },
+  {
+    "name": "Giá giảm dần",
+    "value": "priceDesc"
+  }
+]

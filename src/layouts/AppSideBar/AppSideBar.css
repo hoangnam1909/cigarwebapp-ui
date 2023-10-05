@@ -1,0 +1,8 @@
+.nav-item {
+  margin: 3px 0;
+}
+
+.nav-link:hover {
+  border-radius: 0.375rem;
+  background-color: #ececec;
+}
