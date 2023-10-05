@@ -10,17 +10,17 @@ import FilterText from "~/components/Filter/FilterText";
 import RemoveFilter from "~/components/Filter/RemoveFilter";
 import Pagination from "~/components/Pagination/Pagination";
 import adminRoutes from "~/routes/adminRoutes";
+import activeProductFilterData from "~/data/activeProductFilter.json";
+import { toast } from "react-toastify";
 
 function AdminProducts() {
-  const [dataImpact, setDataImpact] = useState(0);
+  const [reloadFlag, setReloadFlag] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [loadingActive, setLoadingActive] = useState(false);
   const [productsResponse, setProductsResponse] = useState();
   const [categories, setCategories] = useState();
   const [brands, setBrands] = useState();
-  const [deleteSuccess, setDeleteSuccess] = useState(false);
   let location = useLocation();
-  const [keyword, setKeyword] = useState();
   const PAGE_SIZE = 15;
 
   const handleChangeActive = async (e, id) => {
@@ -36,6 +36,9 @@ function AdminProducts() {
         ),
       });
       setLoadingActive(false);
+      toast.success(
+        `Thay đổi trạng thái sản phẩm #${id}: ${e.target.checked.toString()}.`
+      );
     }
   };
 
@@ -44,10 +47,8 @@ function AdminProducts() {
     if (confirmDelete == true) {
       const res = await productAPI.deleteProduct(id);
       if (res.status === 200) {
-        setDeleteSuccess(true);
-        setDataImpact((dataImpact) => {
-          return dataImpact + 1;
-        });
+        setReloadFlag(!reloadFlag);
+        toast.success(`Xoá sản phẩm ${id} thành công.`);
       }
     }
   };
@@ -69,11 +70,6 @@ function AdminProducts() {
 
   useEffect(() => {
     const params = queryString.parse(location.search);
-
-    const config = {
-      onUploadProgress: (progressEvent) => console.log(progressEvent.loaded),
-    };
-
     const getProducts = async () => {
       const res = await productAPI.getAdminProducts(
         params,
@@ -86,27 +82,12 @@ function AdminProducts() {
     };
 
     getProducts();
-  }, [searchParams, dataImpact]);
+  }, [searchParams, reloadFlag]);
 
-  console.log(productsResponse);
   return (
     <>
       <div className="mt-1">
         <h3 className="mb-4 text-gray-800">Danh sách sản phẩm</h3>
-        {deleteSuccess ? (
-          <div
-            className="alert alert-success alert-dismissible fade show"
-            role="alert"
-          >
-            Xoá sản phẩm thành công
-            <button
-              type="button"
-              className="btn-close"
-              data-bs-dismiss="alert"
-              aria-label="Close"
-            ></button>
-          </div>
-        ) : null}
 
         <div className="mb-4">
           <div className="d-flex flex-wrap gap-2">
@@ -128,28 +109,45 @@ function AdminProducts() {
               valueKey={"id"}
             />
 
+            <FilterDropdown
+              filterList={activeProductFilterData}
+              filterName={"Kích hoạt"}
+              filterKey={"active"}
+              displayKey={"name"}
+              valueKey={"value"}
+            />
+
             <RemoveFilter />
 
-            <div className="">
-              <div className="btn-group">
-                <div className="btn-group" role="group">
-                  <Link
-                    className="btn btn-primary"
-                    style={{ width: "180px" }}
-                    to={adminRoutes.adminAddProduct}
-                  >
-                    <i className="fa-solid fa-plus me-2"></i>
-                    Thêm sản phẩm
-                  </Link>
-                </div>
-              </div>
+            <div className="remove-filter">
+              <a
+                type="button"
+                className="btn btn-success px-4"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setReloadFlag(!reloadFlag);
+                }}
+              >
+                <i className="fa-solid fa-filter-circle-xmark me-2"></i>
+                Làm mới dữ liệu
+              </a>
+            </div>
+
+            <div className="btn-group" role="group">
+              <Link
+                className="btn btn-primary"
+                style={{ width: "180px" }}
+                to={adminRoutes.adminAddProduct}
+              >
+                <i className="fa-solid fa-plus me-2"></i>
+                Thêm sản phẩm
+              </Link>
             </div>
           </div>
         </div>
 
         <div className="card shadow mb-4">
-          {productsResponse?.content?.length != 0 &&
-          productsResponse != null ? (
+          {productsResponse?.content?.length != 0 ? (
             <>
               <div className="d-flex justify-content-end mt-3 mb-1 px-4">
                 <Pagination pageData={productsResponse} />
@@ -200,6 +198,7 @@ function AdminProducts() {
                       ></th>
                     </tr>
                   </thead>
+
                   {productsResponse ? (
                     <>
                       <tbody>
@@ -269,12 +268,15 @@ function AdminProducts() {
                                       <hr className="dropdown-divider" />
                                     </li>
                                     <li>
-                                      <Link
+                                      <a
                                         className="dropdown-item text-danger"
-                                        onClick={() => handleDelete(p.id)}
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          handleDelete(p.id);
+                                        }}
                                       >
                                         Xoá
-                                      </Link>
+                                      </a>
                                     </li>
                                   </ul>
                                 </div>

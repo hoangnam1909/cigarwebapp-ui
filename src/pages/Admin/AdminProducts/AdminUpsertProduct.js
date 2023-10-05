@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import brandAPI from "~/apis/brandAPI/brandAPI";
 import categoryAPI from "~/apis/categoryAPI/categoryAPI";
 import productAPI from "~/apis/productAPI/productAPI";
@@ -14,6 +15,7 @@ function AdminAddProduct() {
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
+  const [reloadFlag, setReloadFlag] = useState(false);
 
   const [product, setProduct] = useState({
     name: "",
@@ -64,13 +66,15 @@ function AdminAddProduct() {
       if (res.status == 200) {
         navigate("/admin/products");
         setIsLoading(false);
+        toast.success("Thêm sản phẩm thành công.");
       }
     } else {
       console.log("update product");
       const res = await productAPI.entireUpdateProduct(productId, formData);
       if (res.status == 200) {
-        navigate("/admin/products");
+        setReloadFlag(!reloadFlag);
         setIsLoading(false);
+        toast.success("Chỉnh sửa thông tin sản phẩm thành công.");
       }
     }
   };
@@ -127,8 +131,11 @@ function AdminAddProduct() {
   useEffect(() => {
     getCategories();
     getBrands();
-    if (productId != null) getProduct();
   }, []);
+
+  useEffect(() => {
+    if (productId != null) getProduct();
+  }, [reloadFlag]);
 
   return (
     <div className={`mt-1 ${isLoading ? "pe-none opacity-75" : ""}`}>
@@ -282,14 +289,16 @@ function AdminAddProduct() {
             </div>
 
             <button
-              className="btn btn-dark btn-lg w-100 mb-2"
+              className="btn btn-dark w-100 mb-2"
               type="submit"
               disabled={isLoading}
             >
               {isLoading ? (
                 <span className="spinner-border me-2" aria-hidden="true"></span>
               ) : (
-                <span role="status">Thêm sản phẩm</span>
+                <span role="status">
+                  {productId ? "Sửa sản phẩm" : "Thêm sản phẩm"}
+                </span>
               )}
             </button>
           </form>

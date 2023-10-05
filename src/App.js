@@ -5,7 +5,7 @@ import DefaultLayout from "./layouts/DefaultLayout/DefaultLayout";
 import ScrollTop from "./utils/ScrollTop";
 import { tokenUserRole, verifyToken } from "./services/AuthService";
 import AdminLayout from "./layouts/AdminLayout/AdminLayout";
-import { ToastContainer } from "react-toastify";
+import { Slide, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
@@ -13,7 +13,8 @@ function App() {
     <>
       <ToastContainer
         position="bottom-right"
-        autoClose={3000}
+        autoClose={4000}
+        transition={Slide}
         hideProgressBar
         newestOnTop={false}
         closeOnClick

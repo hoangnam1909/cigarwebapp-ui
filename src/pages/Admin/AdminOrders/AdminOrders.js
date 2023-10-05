@@ -139,7 +139,7 @@ function AdminOrders() {
         </div>
 
         <div className="card shadow mb-4">
-          {ordersResponse?.content?.length != 0 && ordersResponse != null ? (
+          {ordersResponse?.content?.length != 0 ? (
             <>
               <div className="d-flex justify-content-end mt-3 mb-1 px-4">
                 <Pagination pageData={ordersResponse} />
@@ -170,7 +170,7 @@ function AdminOrders() {
                     </tr>
                   </thead>
 
-                  {!loading ? (
+                  {ordersResponse ? (
                     <>
                       <tbody>
                         {ordersResponse?.content?.map((order) => (
