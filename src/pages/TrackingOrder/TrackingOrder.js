@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TrackingOrderDetail from "./TrackingOrderDetail";
-import ScrollTop from "~/utils/ScrollTop";
 import ReCAPTCHA from "react-google-recaptcha";
 import orderAPI from "~/apis/orderAPI/orderAPI";
 import Alert from "~/components/Alert/Alert";
+import ScrollTop from "~/components/ScrollTop/ScrollTop";
 
 function TrackingOrder() {
   document.title = "Kiểm tra đơn hàng";
@@ -35,11 +35,16 @@ function TrackingOrder() {
     getOrder();
   };
 
+  useEffect(() => {
+    setOrderId("");
+    setPhone("");
+  }, [order]);
+
   if (order != null)
     return (
       <>
         <ScrollTop />
-        <TrackingOrderDetail order={order} />
+        <TrackingOrderDetail order={order} setOrder={setOrder} />
       </>
     );
 

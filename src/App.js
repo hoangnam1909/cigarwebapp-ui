@@ -2,11 +2,11 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { privateRoutes, publicRoutes } from "~/routes/routes";
 import { Fragment } from "react";
 import DefaultLayout from "./layouts/DefaultLayout/DefaultLayout";
-import ScrollTop from "./utils/ScrollTop";
 import { tokenUserRole, verifyToken } from "./services/AuthService";
 import AdminLayout from "./layouts/AdminLayout/AdminLayout";
 import { Slide, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ScrollTop from "./components/ScrollTop/ScrollTop";
 
 function App() {
   return (

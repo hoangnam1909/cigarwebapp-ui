@@ -8,6 +8,10 @@ const categoryAPI = {
     const url = `${publicEndpoints.categories}`;
     return axiosClient.get(url);
   },
+  getCategory: (id) => {
+    const url = `${publicEndpoints.categories}/${id}`;
+    return axiosClient.get(url);
+  },
 
   // Private API
   getAdminCategories: (params) => {
@@ -17,6 +21,10 @@ const categoryAPI = {
   addCategory: (requestBody) => {
     const url = `${privateEndpoints.categories}`;
     return axiosAuth.post(url, requestBody);
+  },
+  updateCategory: (id, requestBody) => {
+    const url = `${privateEndpoints.categories}/${id}`;
+    return axiosAuth.put(url, requestBody);
   },
   deleteCategory: (id) => {
     const url = `${privateEndpoints.categories}/${id}`;

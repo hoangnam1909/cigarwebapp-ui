@@ -13,6 +13,9 @@ export let publicEndpoints = {
   customer: "/customers",
   orders: "/orders",
   trackingOrder: "/orders/tracking",
+  payments: "/payments",
+  updatePaymentStatus: "/payments/update-payment-status",
+  paymentDestinations: "/payment-destinations",
 };
 
 export let privateEndpoints = {

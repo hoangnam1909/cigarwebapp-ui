@@ -10,6 +10,10 @@ const brandAPI = {
   },
 
   // Private API
+  getAdminBrand: (id) => {
+    const url = `${privateEndpoints.brands}/${id}`;
+    return axiosAuth.get(url);
+  },
   getAdminBrands: (params) => {
     const url = `${privateEndpoints.brands}`;
     return axiosAuth.get(url, { params: params });
@@ -17,6 +21,10 @@ const brandAPI = {
   addBrand: (requestBody) => {
     const url = `${privateEndpoints.brands}`;
     return axiosAuth.post(url, requestBody);
+  },
+  updateBrand: (id, requestBody) => {
+    const url = `${privateEndpoints.brands}/${id}`;
+    return axiosAuth.put(url, requestBody);
   },
   deleteBrand: (id) => {
     const url = `${privateEndpoints.brands}/${id}`;

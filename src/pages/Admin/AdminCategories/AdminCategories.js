@@ -6,21 +6,21 @@ import Pagination from "~/components/Pagination/Pagination";
 import adminRoutes from "~/routes/adminRoutes";
 
 function AdminCategories() {
+  document.title = "Quản lý danh mục";
+
   const [dataImpact, setDataImpact] = useState(0);
   const [categoriesResponse, setCategoriesResponse] = useState();
-  const [deleteSuccess, setDeleteSuccess] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [keyword, setKeyword] = useState();
   const [loading, setLoading] = useState(false);
   let location = useLocation();
-  const PAGE_SIZE = 15;
+  const PAGE_SIZE = 12;
 
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm("Bạn chắc chắn xoá danh mục này?");
     if (confirmDelete == true) {
       const res = await categoryAPI.deleteCategory(id);
       if (res.status === 200) {
-        setDeleteSuccess(true);
         setDataImpact((dataImpact) => {
           return dataImpact + 1;
         });
@@ -30,6 +30,7 @@ function AdminCategories() {
 
   useEffect(() => {
     const params = queryString.parse(location.search);
+    params.size = params.size ? params.size : PAGE_SIZE;
 
     const getCategories = async () => {
       setLoading(true);
@@ -47,20 +48,6 @@ function AdminCategories() {
     <>
       <div className="mt-1">
         <h3 className="mb-4 text-gray-800">Danh sách danh mục</h3>
-        {deleteSuccess ? (
-          <div
-            className="alert alert-success alert-dismissible fade show"
-            role="alert"
-          >
-            Xoá danh mục thành công
-            <button
-              type="button"
-              className="btn-close"
-              data-bs-dismiss="alert"
-              aria-label="Close"
-            ></button>
-          </div>
-        ) : null}
 
         <div className="mb-4">
           <div className="d-flex flex-wrap gap-2">

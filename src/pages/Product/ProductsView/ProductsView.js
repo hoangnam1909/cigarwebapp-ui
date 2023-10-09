@@ -13,14 +13,14 @@ import ProductCardSkeletonView from "~/components/Skeleton/ProductCardSkeletonVi
 import sortData from "~/data/productSortData.json";
 
 function ProductsView() {
+  document.title = "Các sản phẩm";
+
   const [searchParams, setSearchParams] = useSearchParams();
   let location = useLocation();
 
   const [categories, setCategories] = useState();
   const [brands, setBrands] = useState();
   const [productsResponse, setProductsResponse] = useState();
-
-  const [isSuccess, setISuccess] = useState(false);
 
   const PAGE_SIZE = 12;
 
@@ -57,9 +57,7 @@ function ProductsView() {
   }, []);
 
   useEffect(() => {
-    setISuccess(false);
     getProducts();
-    setISuccess(true);
   }, [searchParams]);
 
   return (
@@ -89,15 +87,15 @@ function ProductsView() {
       </div>
 
       <div className="box-sorting mb-3">
-        <section className="d-flex flex-wrap justify-content-between gap-2">
-          <div className="left-panel-sorting align-self-end">
+        <section className="d-flex flex-wrap justify-content-between">
+          <div className="w-50 left-panel-sorting align-self-end">
             <h5 className="">
               {productsResponse == null || productsResponse?.totalElements == 0
                 ? "Không có sản phẩm nào được tìm thấy"
                 : `${productsResponse?.totalElements} Sản phẩm được tìm thấy`}
             </h5>
           </div>
-          <div className="right-panel-sorting">
+          <div className="w-50 right-panel-sorting text-end">
             <FilterDropdown
               filterList={sortData}
               filterName={"Sắp xếp"}
@@ -109,7 +107,7 @@ function ProductsView() {
         </section>
       </div>
 
-      {isSuccess ? (
+      {productsResponse ? (
         <>
           <div className="product-box mb-3">
             <div className="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6 g-1 mb-3">

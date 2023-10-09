@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import axiosClient from "../axiosClient";
 import { publicEndpoints } from "../endpoints";
 
@@ -11,6 +12,11 @@ const authAPI = {
     return axiosClient.post(url, {
       refreshToken: refreshToken,
     });
+  },
+  currentUser: () => {
+    const accessToken = Cookies.get("accessToken");
+    const url = `${publicEndpoints.currentUser}/${accessToken}`;
+    return axiosClient.get(url);
   },
 };
 

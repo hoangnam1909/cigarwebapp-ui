@@ -5,12 +5,13 @@ import Cookies from "js-cookie";
 import { tokenUserRole } from "~/services/AuthService";
 import { getBrowerInfo } from "~/services/BrowserInfo";
 import authAPI from "~/apis/authAPI/authAPI";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const [isError, setIsError] = useState();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmitForm = async (e) => {
@@ -30,7 +31,7 @@ function Login() {
         Cookies.set("rememberMe", rememberMe);
         setIsSubmitting(false);
 
-        if (tokenUserRole().toLowerCase() == "admin") {
+        if (tokenUserRole().toLowerCase() === "admin") {
           window.location.href = "/admin";
         } else {
           window.location.href = "/";
@@ -38,7 +39,7 @@ function Login() {
       }
     } catch (error) {
       setIsSubmitting(false);
-      setIsError(true);
+      toast.error("Đăng nhập không thành công", { position: "top-center" });
       return;
     }
   };
@@ -48,24 +49,18 @@ function Login() {
       <main className="form-signin w-100 m-auto">
         <form onSubmit={handleSubmitForm}>
           <div className="brand-logo d-flex justify-content-center">
-            <img
-              className="mb-2"
-              src="https://res.cloudinary.com/nhn1909/image/upload/v1690041731/ktypjs6ap3ykjv6eydqu.png"
-              alt=""
-              width="200"
-              height="200"
-            />
+            <Link to={"/"}>
+              <img
+                className="mb-2"
+                src="https://res.cloudinary.com/nhn1909/image/upload/v1690041731/ktypjs6ap3ykjv6eydqu.png"
+                alt=""
+                width="200"
+                height="200"
+              />
+            </Link>
           </div>
 
-          {isError ? (
-            <>
-              <div className="alert alert-danger" role="alert">
-                Xảy ra lỗi khi đăng nhập
-              </div>
-            </>
-          ) : null}
-
-          <div className="form-floating">
+          <div className="form-floating mb-2">
             <input
               type="text"
               className="form-control"
@@ -76,7 +71,7 @@ function Login() {
             <label>Tên đăng nhập</label>
           </div>
 
-          <div className="form-floating">
+          <div className="form-floating mb-2">
             <input
               type="password"
               className="form-control"

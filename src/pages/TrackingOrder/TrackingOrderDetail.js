@@ -4,7 +4,7 @@ import { toVND } from "~/utils/NumberFormatter";
 import { formatPhoneNumber } from "~/utils/StringFormatter";
 import { rewriteUrl } from "~/utils/UrlRewrite";
 
-function TrackingOrderDetail({ order }) {
+function TrackingOrderDetail({ order, setOrder }) {
   document.title = `Tình trạng đơn hàng #${order.id}`;
 
   return (
@@ -14,31 +14,40 @@ function TrackingOrderDetail({ order }) {
           className="card px-4 py-4 mt-3 mx-auto d-flex align-items-center"
           style={{ maxWidth: "660px" }}
         >
-          <div className="d-flex flex-column my-3 border-bottom w-100">
-            <div className="icon-container d-flex justify-content-center mb-3">
+          <div className="d-flex w-100">
+            <a
+              className="btn btn-outline-secondary cursor-pointer py-2"
+              onClick={(e) => {
+                e.preventDefault();
+                setOrder();
+              }}
+            >
+              <i className="fa-solid fa-arrow-left me-2"></i>
+              Trở lại
+            </a>
+          </div>
+
+          <div className="d-flex flex-column mt-3 border-bottom w-100">
+            <div className="icon-container d-flex justify-content-center mb-4">
               <i
-                className="fa-regular fa-circle-check"
-                style={{ color: "#f0907f", fontSize: "4rem" }}
+                className="fa-solid fa-heart"
+                style={{ color: "#f0907f", fontSize: "4.2rem" }}
               ></i>
             </div>
 
             <h5
-              className="mb-2"
+              className="mb-3"
               style={{ color: "#f0907f", textAlign: "center" }}
             >
               Cảm ơn bạn đã mua hàng
             </h5>
 
-            <h5 className="text-center mb-0">
-              <span className="badge bg-secondary">
-                {order.orderStatus?.name}
-              </span>
-            </h5>
-
             <div className="mb-3"></div>
           </div>
 
-          <div className="mb-3 border-bottom w-100">
+          <div className="py-3 border-bottom w-100">
+            <h4 className="mb-3">Thông tin khách hàng</h4>
+
             <div className="row mb-1">
               <div className="col-4">
                 <strong>Mã đơn hàng</strong>
@@ -81,11 +90,58 @@ function TrackingOrderDetail({ order }) {
               </div>
               <div className="col">{order.customer?.email}</div>
             </div>
-
-            <div className="mb-4"></div>
           </div>
 
-          <div className="mb-3 border-bottom w-100">
+          <div className="py-3 border-bottom w-100">
+            <h4 className="mb-3">Thông tin thanh toán</h4>
+
+            <div className="row mb-1">
+              <div className="col-4">
+                <strong>Phương thức thanh toán</strong>
+              </div>
+              <div className="col">
+                {order.payment?.paymentDestination?.name}
+              </div>
+            </div>
+
+            <div className="row mb-1">
+              <div className="col-4">
+                <strong>Kết quả thanh toán</strong>
+              </div>
+              <div className="col">
+                {order.payment?.isPaid ? (
+                  <span className="fw-medium text-success">Đã thanh toán</span>
+                ) : (
+                  <span className="fw-medium text-danger">Chưa thanh toán</span>
+                )}
+              </div>
+            </div>
+
+            {order.payment.isPaid == false ? (
+              <div className="pt-2">
+                <a
+                  className="btn btn-outline-danger w-100 px-3 py-2"
+                  href={order.payment.paymentUrl}
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <i className="fa-solid fa-qrcode me-2"></i>
+                  Thanh toán ngay
+                </a>
+              </div>
+            ) : null}
+          </div>
+
+          <div className="py-3 border-bottom w-100">
+            <h4 className="mb-3">Thông tin giao hàng</h4>
+
+            <div className="row mb-1">
+              <div className="col-4">
+                <strong>Tình trạng đơn hàng</strong>
+              </div>
+              <div className="col">{order.orderStatus?.name}</div>
+            </div>
+
             <div className="row mb-1">
               <div className="col-4">
                 <strong>Đơn vị vận chuyển</strong>
@@ -113,11 +169,9 @@ function TrackingOrderDetail({ order }) {
               </div>
               <div className="col">{order.note}</div>
             </div>
-
-            <div className="mb-3"></div>
           </div>
 
-          <div className="border-bottom w-100">
+          <div className="py-3 border-bottom w-100">
             <h5 className="mb-3">Các sản phẩm đã đặt</h5>
             {order.orderItems?.map((orderItem) => {
               return (
@@ -156,11 +210,11 @@ function TrackingOrderDetail({ order }) {
                 </div>
               );
             })}
-            <h6 className="text-end my-3">
+
+            <h6 className="text-end mt-3">
               Tổng thanh toán:{" "}
               <span className="text-danger">{toVND(order.totalPrice)}</span>
             </h6>
-            <div className="mb-3"></div>
           </div>
 
           <div className="pt-4 text-center">

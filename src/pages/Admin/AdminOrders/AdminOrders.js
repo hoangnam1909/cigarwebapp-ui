@@ -19,6 +19,8 @@ import orderSortData from "~/data/orderSortData.json";
 import FilterDropdown from "~/components/Filter/FilterDropdown";
 
 function AdminOrders() {
+  document.title = "Quản lý đơn đặt hàng";
+
   const [ordersResponse, setOrdersResponse] = useState();
   const [orderStatuses, setOrderStatuses] = useState();
   const [deliveryCompanies, setDeliveryCompanies] = useState();
@@ -27,7 +29,7 @@ function AdminOrders() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
 
-  const PAGE_SIZE = 15;
+  const PAGE_SIZE = 10;
 
   const getOrderStatuses = async () => {
     const res = await orderStatusAPI.getOrderStatuses();
@@ -66,30 +68,7 @@ function AdminOrders() {
   return (
     <>
       <div className="mt-1">
-        <div class="toast-container position-fixed bottom-0 end-0 p-3">
-          <div
-            id="liveToast"
-            class="toast"
-            role="alert"
-            aria-live="assertive"
-            aria-atomic="true"
-          >
-            <div class="toast-header">
-              <img src="..." class="rounded me-2" alt="..." />
-              <strong class="me-auto">Bootstrap</strong>
-              <small>11 mins ago</small>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="toast"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="toast-body">Hello, world! This is a toast message.</div>
-          </div>
-        </div>
-
-        <h3 className="mt-2 mb-4 text-gray-800">Danh sách đơn hàng</h3>
+        <h3 className="mb-4 text-gray-800">Danh sách đơn hàng</h3>
 
         <div className="mb-4">
           <div className="d-flex flex-wrap gap-2">
@@ -156,11 +135,11 @@ function AdminOrders() {
                       <th style={{ width: "5%" }} className="">
                         ID
                       </th>
-                      <th style={{ width: "10%" }} className="text-end">
-                        Tổng tiền
-                      </th>
-                      <th style={{ width: "20%" }} className="ps-5">
+                      <th style={{ width: "20%" }} className="">
                         Khách hàng
+                      </th>
+                      <th style={{ width: "10%" }} className="">
+                        Tổng tiền
                       </th>
                       <th style={{ width: "20%" }}>Ngày đặt hàng</th>
                       <th style={{ width: "15%" }}>Trạng thái</th>
@@ -183,19 +162,14 @@ function AdminOrders() {
                             }}
                             style={{ cursor: "pointer" }}
                           >
-                            <td className="fw-bolder py-3">
-                              <Link
-                                to={`${adminRoutes.adminEditOrder}/${order.id}`}
-                                className="d-block"
-                              >
-                                #{order.id}
-                              </Link>
+                            <td className="align-middle fw-bolder fw-bolder py-3">
+                              #{order.id}
                             </td>
-                            <td className="align-middle text-end">
-                              {toVND(order.totalPrice)}
-                            </td>
-                            <td className="align-middle ps-5">
+                            <td className="align-middle">
                               {order.customer.fullName}
+                            </td>
+                            <td className="align-middle">
+                              {toVND(order.totalPrice)}
                             </td>
                             <td className="align-middle">
                               {moment(order.createdAt).format("LT")}

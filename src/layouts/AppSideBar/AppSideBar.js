@@ -1,13 +1,27 @@
 import { removeAuthInfo } from "~/services/AuthService";
 import "./AppSideBar.css";
 import { Link, useLocation } from "react-router-dom";
+import authAPI from "~/apis/authAPI/authAPI";
+import { useEffect, useState } from "react";
 
 function AppSideBar() {
   const location = useLocation();
+  const [currentUser, setCurrentUser] = useState();
+
+  const getCurrentUser = async () => {
+    const res = await authAPI.currentUser();
+    if (res.status === 200) {
+      setCurrentUser(res.data.result);
+    }
+  };
+
+  useEffect(() => {
+    getCurrentUser();
+  }, []);
 
   return (
     <div
-      className="d-flex flex-column flex-shrink-0 p-3 bg-white vh-100"
+      className="d-flex flex-column flex-shrink-0 p-3 shadow bg-white vh-100"
       style={{ width: "260px" }}
     >
       <div className="sidebar-header text-center">
@@ -98,22 +112,12 @@ function AppSideBar() {
             height="32"
             className="rounded-circle me-2"
           />
-          <strong>mdo</strong>
+          <strong>{`${currentUser?.firstName} ${currentUser?.lastName}`}</strong>
         </a>
         <ul className="dropdown-menu text-small shadow">
           <li>
             <a className="dropdown-item" href="#">
-              New project...
-            </a>
-          </li>
-          <li>
-            <a className="dropdown-item" href="#">
-              Settings
-            </a>
-          </li>
-          <li>
-            <a className="dropdown-item" href="#">
-              Profile
+              Thông tin cá nhân
             </a>
           </li>
           <li>

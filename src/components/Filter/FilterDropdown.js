@@ -18,14 +18,18 @@ function FilterDropdown({
   return (
     <div className="dropdown">
       <button
-        className="btn btn-outline-dark dropdown-toggle"
+        className="btn btn-outline-dark"
         type="button"
         data-bs-toggle="dropdown"
         aria-expanded="false"
       >
         {currentValue}
+        <i className="fa-solid fa-caret-down ms-2"></i>
       </button>
-      <ul className="dropdown-menu">
+      <ul
+        className="dropdown-menu"
+        style={{ maxHeight: "500px", overflowY: "auto" }}
+      >
         <li
           className="dropdown-item cursor-pointer"
           onClick={() => {

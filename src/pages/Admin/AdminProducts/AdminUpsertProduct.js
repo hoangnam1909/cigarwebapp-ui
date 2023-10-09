@@ -9,8 +9,13 @@ import ImagesUpload from "~/components/Input/ImagesUpload";
 import RichTextEditor from "~/components/Input/RichTextEditor";
 import { numberInputOnly } from "~/utils/InputUtils";
 
-function AdminAddProduct() {
+function AdminUpsertProduct() {
   const { productId } = useParams();
+
+  document.title = `${
+    productId == null ? "Thêm sản phẩm" : `Chỉnh sửa sản phẩm #${productId}`
+  }`;
+
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -58,25 +63,24 @@ function AdminAddProduct() {
       formData.append("files", []);
     }
 
-    console.log(formData);
-
     if (productId == null) {
       console.log("add product");
       const res = await productAPI.addProduct(formData);
-      if (res.status == 200) {
+      if (res.status === 200) {
         navigate("/admin/products");
-        setIsLoading(false);
         toast.success("Thêm sản phẩm thành công.");
       }
     } else {
       console.log("update product");
+      console.log(formData);
       const res = await productAPI.entireUpdateProduct(productId, formData);
-      if (res.status == 200) {
+      if (res.status === 200) {
         setReloadFlag(!reloadFlag);
-        setIsLoading(false);
         toast.success("Chỉnh sửa thông tin sản phẩm thành công.");
       }
     }
+
+    setIsLoading(false);
   };
 
   const getCategories = async () => {
@@ -121,9 +125,6 @@ function AdminAddProduct() {
         brandId: response?.data.result.brand.id
           ? response?.data.result.brand.id
           : 0,
-        productImages: response?.data.result.productImages
-          ? response?.data.result.productImages.map((img) => img.linkToImage)
-          : [],
       });
     }
   };
@@ -139,7 +140,7 @@ function AdminAddProduct() {
 
   return (
     <div className={`mt-1 ${isLoading ? "pe-none opacity-75" : ""}`}>
-      <h3 className="mt-2 mb-4 text-gray-800">
+      <h3 className="mb-4 text-gray-800">
         {productId == null ? "Thêm sản phẩm" : "Chỉnh sửa thông tin sản phẩm"}
       </h3>
 
@@ -289,7 +290,7 @@ function AdminAddProduct() {
             </div>
 
             <button
-              className="btn btn-dark w-100 mb-2"
+              className="btn btn-secondary py-2 px-3"
               type="submit"
               disabled={isLoading}
             >
@@ -297,7 +298,7 @@ function AdminAddProduct() {
                 <span className="spinner-border me-2" aria-hidden="true"></span>
               ) : (
                 <span role="status">
-                  {productId ? "Sửa sản phẩm" : "Thêm sản phẩm"}
+                  {productId ? "Sửa thông tin sản phẩm" : "Thêm sản phẩm"}
                 </span>
               )}
             </button>
@@ -308,4 +309,4 @@ function AdminAddProduct() {
   );
 }
 
-export default AdminAddProduct;
+export default AdminUpsertProduct;

@@ -4,8 +4,11 @@ import { Link } from "react-router-dom";
 import specs from "~/data/specs.json";
 import productAPI from "~/apis/productAPI/productAPI";
 import ProductCard from "~/components/Product/ProductCard/ProductCard";
+import ProductCardSkeletonView from "~/components/Skeleton/ProductCardSkeletonView/ProductCardSkeletonView";
 
 function Home() {
+  document.title = "Trang Chủ";
+
   const PRODUCT_SIZE = 12;
   const [products, setProducts] = useState();
 
@@ -55,13 +58,21 @@ function Home() {
       <div className="products">
         <h2 className="text-uppercase mb-4">Sản phẩm nổi bật</h2>
         <div className="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6 g-1">
-          {products?.content?.map((product) => {
-            return (
-              <div key={product.id} className="col">
-                <ProductCard product={product} />
-              </div>
-            );
-          })}
+          {products ? (
+            <>
+              {products?.content?.map((product) => {
+                return (
+                  <div key={product.id} className="col">
+                    <ProductCard product={product} />
+                  </div>
+                );
+              })}
+            </>
+          ) : (
+            <>
+              <ProductCardSkeletonView count={PRODUCT_SIZE} />
+            </>
+          )}
         </div>
       </div>
     </>

@@ -29,6 +29,14 @@ const orderAPI = {
       },
     });
   },
+  getAdminOrder: (id) => {
+    const url = `${privateEndpoints.orders}/${id}`;
+    return axiosAuth.get(url);
+  },
+  partialUpdateOrder: (id, requestBody) => {
+    const url = `${privateEndpoints.orders}/${id}`;
+    return axiosAuth.patch(url, requestBody);
+  },
 };
 
 export default orderAPI;

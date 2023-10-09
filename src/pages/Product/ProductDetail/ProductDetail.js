@@ -3,7 +3,9 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import productAPI from "~/apis/productAPI/productAPI";
 import ProductCard from "~/components/Product/ProductCard/ProductCard";
+import ProductNotAvailable from "~/components/Product/ProductNotAvailable/ProductNotAvailable";
 import ProductCardSkeletonView from "~/components/Skeleton/ProductCardSkeletonView/ProductCardSkeletonView";
+import ProductDetailSkeleton from "~/components/Skeleton/ProductDetailSkeleton/ProductDetailSkeleton";
 import { addProductToCart } from "~/services/CartService";
 import { toVND } from "~/utils/NumberFormatter";
 import { formatPhoneNumber } from "~/utils/StringFormatter";
@@ -48,7 +50,8 @@ function ProductDetail() {
     getProductsSuggestion();
   }, [productRewriteUrl]);
 
-  console.log(product);
+  if (product == null && isSuccess) return <ProductNotAvailable />;
+
   return (
     <>
       {product ? (
@@ -102,10 +105,6 @@ function ProductDetail() {
               <div className="col-12 col-md-5 d-flex flex-column justify-content-between">
                 <div className="d-flex flex-column justify-content-between h-100 px-3 py-3">
                   <div className="top-side">
-                    {/* <div className="d-flex justify-content-between align-items-center">
-                    <h3>{product.name}</h3>
-                    </div> */}
-
                     {product.unitsInStock == 0 ? (
                       <div className="d-flex justify-content-between align-items-center">
                         <p className="fs-6 badge text-bg-warning my-1">
@@ -164,55 +163,56 @@ function ProductDetail() {
                         )}
                       </a>
                     </h5>
-                    <div className="btn-group group w-100" role="group">
-                      <button
-                        type="button"
-                        className="btn btn-primary rounded-3"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        {/* <ZaloIcon className="me-2" size="35px" /> */}
-                        Zalo
-                      </button>
-                      <ul className="dropdown-menu w-100">
-                        <li>
-                          <a
-                            className="dropdown-item"
-                            target="_blank"
-                            rel="noreferrer"
-                            href={`https://zalo.me/${process.env.REACT_APP_HANOI_ZALO_NUMBER}`}
-                          >
-                            {/* <ZaloIcon className="me-2" size="35px" /> */}
-                            Hà Nội
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            className="dropdown-item"
-                            target="_blank"
-                            rel="noreferrer"
-                            href={`https://zalo.me/${process.env.REACT_APP_HCM_ZALO_NUMBER}`}
-                          >
-                            {/* <ZaloIcon className="me-2" size="35px" /> */}
-                            Thành phố Hồ Chí Minh
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
 
-                    <button
-                      className="btn btn-outline-secondary w-100"
-                      onClick={() => {
-                        addProductToCart(product);
-                        toast.success(
-                          `Đã thêm sản phẩm ${product.name} vào giỏ hàng`
-                        );
-                      }}
-                      disabled={product.unitsInStock == 0}
-                    >
-                      <i className="fa-solid fa-cart-plus me-2"></i>
-                      Thêm vào giỏ hàng
-                    </button>
+                    <div className="d-flex flex-row-reverse gap-2">
+                      <div className="btn-group group w-50" role="group">
+                        <button
+                          type="button"
+                          className="btn btn-primary py-2 rounded-3"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          <i className="fa-solid fa-mobile-screen me-2"></i>
+                          Zalo
+                        </button>
+                        <ul className="dropdown-menu w-100">
+                          <li>
+                            <a
+                              className="dropdown-item"
+                              target="_blank"
+                              rel="noreferrer"
+                              href={`https://zalo.me/${process.env.REACT_APP_HANOI_ZALO_NUMBER}`}
+                            >
+                              Hà Nội
+                            </a>
+                          </li>
+                          <li>
+                            <a
+                              className="dropdown-item"
+                              target="_blank"
+                              rel="noreferrer"
+                              href={`https://zalo.me/${process.env.REACT_APP_HCM_ZALO_NUMBER}`}
+                            >
+                              Thành phố Hồ Chí Minh
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div className="cart-btn w-50">
+                        <button
+                          className="btn btn-outline-secondary py-2 w-100"
+                          onClick={() => {
+                            addProductToCart(product);
+                            toast.success("Sản phẩm đã được thêm vào giỏ hàng");
+                          }}
+                          disabled={product.unitsInStock == 0}
+                        >
+                          <i className="fa-solid fa-cart-plus me-2"></i>
+                          Thêm vào giỏ hàng
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -220,7 +220,9 @@ function ProductDetail() {
           </div>
         </>
       ) : (
-        <>{/* <ProductDetailSkeleton /> */}</>
+        <>
+          <ProductDetailSkeleton />
+        </>
       )}
 
       <div className="mb-3 pb-3">

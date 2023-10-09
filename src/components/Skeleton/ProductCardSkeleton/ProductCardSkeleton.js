@@ -1,4 +1,5 @@
 import "../Skeleton.scss";
+
 function ProductCardSkeleton() {
   return (
     <div className="card shadow-sm h-100 loading-skeleton">

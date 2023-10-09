@@ -14,6 +14,8 @@ import activeProductFilterData from "~/data/activeProductFilter.json";
 import { toast } from "react-toastify";
 
 function AdminProducts() {
+  document.title = "Quản lý sản phẩm";
+
   const [reloadFlag, setReloadFlag] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [loadingActive, setLoadingActive] = useState(false);
@@ -122,20 +124,20 @@ function AdminProducts() {
             <div className="remove-filter">
               <a
                 type="button"
-                className="btn btn-success px-4"
+                className="btn btn-success px-3"
                 onClick={(e) => {
                   e.preventDefault();
                   setReloadFlag(!reloadFlag);
                 }}
               >
-                <i className="fa-solid fa-filter-circle-xmark me-2"></i>
+                <i className="fa-solid fa-rotate-right me-2"></i>
                 Làm mới dữ liệu
               </a>
             </div>
 
             <div className="btn-group" role="group">
               <Link
-                className="btn btn-primary"
+                className="btn btn-primary px-3"
                 style={{ width: "180px" }}
                 to={adminRoutes.adminAddProduct}
               >

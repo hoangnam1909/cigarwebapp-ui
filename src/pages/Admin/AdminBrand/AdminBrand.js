@@ -6,23 +6,23 @@ import Pagination from "~/components/Pagination/Pagination";
 import adminRoutes from "~/routes/adminRoutes";
 
 function AdminBrand() {
-  const [dataImpact, setDataImpact] = useState(0);
+  document.title = "Quản lý thương hiệu";
+
   const [brandsResponse, setBrandsResponse] = useState();
-  const [deleteSuccess, setDeleteSuccess] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [keyword, setKeyword] = useState();
   const [loading, setLoading] = useState(false);
 
   let location = useLocation();
-  const PAGE_SIZE = 15;
+  const PAGE_SIZE = 12;
 
   useEffect(() => {
     const params = queryString.parse(location.search);
+    params.size = params.size ? params.size : PAGE_SIZE;
 
     const getBrands = async () => {
       setLoading(true);
       const res = await brandAPI.getAdminBrands(params);
-
       if (res.status === 200) {
         setBrandsResponse(res.data.result);
         setLoading(false);
@@ -30,26 +30,12 @@ function AdminBrand() {
     };
 
     getBrands();
-  }, [dataImpact, searchParams]);
+  }, [searchParams]);
 
   return (
     <>
       <div className="mt-1">
         <h3 className="mb-4 text-gray-800">Danh sách thương hiệu</h3>
-        {deleteSuccess ? (
-          <div
-            className="alert alert-success alert-dismissible fade show"
-            role="alert"
-          >
-            Xoá thương hiệu thành công
-            <button
-              type="button"
-              className="btn-close"
-              data-bs-dismiss="alert"
-              aria-label="Close"
-            ></button>
-          </div>
-        ) : null}
 
         <div className="mb-4">
           <div className="d-flex flex-wrap gap-2">

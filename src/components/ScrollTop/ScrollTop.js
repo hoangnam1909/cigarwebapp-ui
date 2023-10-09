@@ -12,12 +12,12 @@ const ScrollTop = () => {
 
   useLayoutEffect(() => {
     if (!pathname.startsWith("/admin")) {
-      let toggler = document.querySelector("button.navbar-toggler.collapsed");
-      if (toggler == null) {
+      let toggler = document.querySelector("div.navbar-collapse.collapse.show");
+      if (toggler != null) {
         document.querySelector("button.navbar-toggler")?.click();
       }
     }
-  }, [location]);
+  }, [location, searchParams]);
 
   return null;
 };

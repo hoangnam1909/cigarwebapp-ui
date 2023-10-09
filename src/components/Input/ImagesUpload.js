@@ -12,7 +12,7 @@ function ImagesUpload({ setImages, setImageFiles }) {
     <>
       <label className="form-label">Ảnh sản phẩm</label>
       <input
-        className="form-control mb-3"
+        className="form-control"
         type="file"
         accept=""
         multiple

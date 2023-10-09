@@ -5,7 +5,7 @@ function DefaultLayout({ children }) {
   return (
     <>
       <AppHeader />
-      <div className="container mt-3">{children}</div>
+      <div className="container px-1 mt-3">{children}</div>
       <AppFooter />
     </>
   );

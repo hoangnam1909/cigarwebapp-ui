@@ -10,9 +10,11 @@ import AdminCategories from "~/pages/Admin/AdminCategories/AdminCategories";
 import AdminOrders from "~/pages/Admin/AdminOrders/AdminOrders";
 import AdminProducts from "~/pages/Admin/AdminProducts/AdminProducts";
 import NotFound from "~/pages/Error/NotFound";
-import AdminAddBrand from "~/pages/Admin/AdminBrand/AdminAddBrand";
-import AdminAddCategory from "~/pages/Admin/AdminCategories/AdminAddCategory";
-import AdminAddProduct from "~/pages/Admin/AdminProducts/AdminUpsertProduct";
+import PaymentReturnPage from "~/pages/Payment/PaymentReturnPage";
+import AdminUpsertProduct from "~/pages/Admin/AdminProducts/AdminUpsertProduct";
+import AdminUpsertBrand from "~/pages/Admin/AdminBrand/AdminUpsertBrand";
+import AdminUpsertCategory from "~/pages/Admin/AdminCategories/AdminUpsertCategory";
+import AdminUpsertOrder from "~/pages/Admin/AdminOrders/AdminUpsertOrder";
 
 export const headerRoutes = [
   // { name: "Trang chủ", path: "/" },
@@ -26,6 +28,7 @@ export const publicRoutes = [
   { path: "/products", component: Product },
   { path: "/products/:productRewriteUrl", component: ProductDetail },
   { path: "/cart", component: Cart },
+  { path: "/payment-result", component: PaymentReturnPage },
   { path: "/tracking-order", component: TrackingOrder },
   { path: "/login", component: Login, layout: null },
   { path: "/*", component: NotFound, layout: null },
@@ -35,17 +38,23 @@ export const privateRoutes = [
   { path: "/admin", component: Dashboard },
 
   { path: "/admin/brands", component: AdminBrand },
-  { path: "/admin/brands/add", component: AdminAddBrand },
+  { path: "/admin/brands/add", component: AdminUpsertBrand },
+  { path: "/admin/brands/edit/:brandId", component: AdminUpsertBrand },
 
   { path: "/admin/categories", component: AdminCategories },
-  { path: "/admin/categories/add", component: AdminAddCategory },
+  { path: "/admin/categories/add", component: AdminUpsertCategory },
+  {
+    path: "/admin/categories/edit/:categoryId",
+    component: AdminUpsertCategory,
+  },
 
   { path: "/admin/orders", component: AdminOrders },
+  { path: "/admin/orders/edit/:orderId", component: AdminUpsertOrder },
 
   { path: "/admin/products", component: AdminProducts },
-  { path: "/admin/products/add", component: AdminAddProduct },
+  { path: "/admin/products/add", component: AdminUpsertProduct },
   {
     path: "/admin/products/edit/:productId",
-    component: AdminAddProduct,
+    component: AdminUpsertProduct,
   },
 ];
