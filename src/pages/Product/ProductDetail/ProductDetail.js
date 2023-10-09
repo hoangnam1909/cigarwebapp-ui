@@ -107,30 +107,13 @@ function ProductDetail() {
                   <div className="top-side">
                     {product.unitsInStock == 0 ? (
                       <div className="d-flex justify-content-between align-items-center">
-                        <p className="fs-6 badge text-bg-warning my-1">
-                          Hết hàng
-                        </p>
+                        <p className="fs-6 badge text-bg-warning">Hết hàng</p>
                       </div>
                     ) : (
                       <div className="d-flex justify-content-between align-items-center">
-                        <p className="fs-6 badge bg-success my-1">Còn hàng</p>
+                        <p className="fs-6 badge bg-success">Còn hàng</p>
                       </div>
                     )}
-
-                    {product.originalPrice != 0 || product.salePrice != 0 ? (
-                      <h3 className="d-flex flex-row flex-wrap mt-1 align-items-baseline">
-                        <span className="text-danger me-2">
-                          {toVND(product?.salePrice)}
-                        </span>
-                        <span className="h6 text-decoration-line-through me-2">
-                          {toVND(product?.originalPrice)}
-                        </span>
-                        <span className="h6 text-danger">
-                          Tiết kiệm{" "}
-                          {toVND(product?.originalPrice - product.salePrice)}
-                        </span>
-                      </h3>
-                    ) : null}
 
                     <div className="mt-2 pr-3" style={{ textAlign: "justify" }}>
                       {product.description ? (
@@ -146,6 +129,26 @@ function ProductDetail() {
                   </div>
 
                   <div className="bottom-side d-flex flex-column gap-2">
+                    <div className="prices">
+                      {product.originalPrice != 0 ? (
+                        <h3 className="mx-0 align-items-baseline">
+                          <span className="h6 text-decoration-line-through me-2">
+                            {toVND(product?.originalPrice)}
+                          </span>
+                          <span className="h6 text-danger">
+                            Tiết kiệm{" "}
+                            {toVND(product?.originalPrice - product.salePrice)}
+                          </span>
+                        </h3>
+                      ) : null}
+
+                      {product.salePrice != 0 ? (
+                        <h3 className="text-danger me-2 mx-0 align-items-baseline">
+                          {toVND(product?.salePrice)}
+                        </h3>
+                      ) : null}
+                    </div>
+
                     <h5 className="card-title text-start text-primary lh-base mb-0">
                       Gọi điện trực tiếp:
                       <br />

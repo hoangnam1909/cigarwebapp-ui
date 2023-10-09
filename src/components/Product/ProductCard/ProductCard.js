@@ -21,10 +21,19 @@ function ProductCard({ product }) {
           >
             {product.name}
           </h6>
-          <p className="card-text mb-0">
-            <del>{toVND(product.originalPrice)}</del>
-          </p>
-          <h6 className="card-text text-danger">{toVND(product.salePrice)}</h6>
+          {product.originalPrice ? (
+            <p className="card-text mb-0">
+              <del>{toVND(product.originalPrice)}</del>
+            </p>
+          ) : null}
+
+          {product.salePrice ? (
+            <h6 className="card-text text-danger">
+              {toVND(product.salePrice)}
+            </h6>
+          ) : (
+            <h6 className="card-text text-danger">Liên hệ</h6>
+          )}
         </div>
       </Link>
     </div>
