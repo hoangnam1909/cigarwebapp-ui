@@ -168,6 +168,7 @@ function Cart() {
     return <EmptyCart />;
   }
 
+  console.log(cart);
   return (
     <>
       {cart != null ? (
@@ -446,8 +447,12 @@ function Cart() {
                               onChange={(e) => {
                                 if (e.target.value < 1)
                                   updateQuantity(product.id, 1);
+                                else if (e.target.value > product.unitsInStock)
+                                  updateQuantity(
+                                    product.id,
+                                    product.unitsInStock
+                                  );
                                 else updateQuantity(product.id, e.target.value);
-
                                 getProductsInCart();
                               }}
                             />

@@ -23,7 +23,7 @@ function ProductDetail() {
 
   const changeProductImage = (link) => {
     if (isSuccess) {
-      document.getElementById("main-product-image").src = link;
+      document.getElementById("main-product").src = link;
     }
   };
 

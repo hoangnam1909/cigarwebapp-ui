@@ -2,6 +2,7 @@ import queryString from "query-string";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import categoryAPI from "~/apis/categoryAPI/categoryAPI";
+import ArrowPagination from "~/components/Pagination/ArrowPagination";
 import Pagination from "~/components/Pagination/Pagination";
 import adminRoutes from "~/routes/adminRoutes";
 
@@ -111,7 +112,11 @@ function AdminCategories() {
         </div>
 
         <div className="card shadow mb-4">
-          <div className="table-responsive rounded p-4 pb-0">
+          <div className="d-flex justify-content-end mt-3 px-4">
+            <ArrowPagination pageData={categoriesResponse} />
+          </div>
+
+          <div className="px-4 py-0">
             <table
               className="table table-hover"
               id="dataTable"

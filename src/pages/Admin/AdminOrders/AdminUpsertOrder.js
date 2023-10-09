@@ -33,7 +33,7 @@ function AdminUpsertOrder() {
 
           <div className="row row-cols-1 row-cols-xxl-2 g-3">
             <div className="col-12 col-xxl-8">
-              <div className="card shadow p-4 mb-2">
+              <div className="card shadow p-4">
                 <div className="mb-4 d-flex justify-content-between border-bottom pb-3 gap-2">
                   <h5 className="mb-1">
                     {moment(order.createdAt).format("LTS")}
@@ -201,16 +201,21 @@ function AdminUpsertOrder() {
             </div>
 
             <div className="col-12 col-xxl-4">
-              <div className="card shadow p-4 mb-3">
-                <h5 className="mb-3 text-gray-800">Tình trạng đơn hàng</h5>
+              <div className="row g-3">
+                <div className="col-12 col-md-6 col-xxl-12">
+                  <div className="card shadow p-4">
+                    <h5 className="mb-3 text-gray-800">Tình trạng đơn hàng</h5>
 
-                <OrderStatusForm order={order} getOrder={getOrder} />
-              </div>
+                    <OrderStatusForm order={order} getOrder={getOrder} />
+                  </div>
+                </div>
+                <div className="col-12 col-md-6 col-xxl-12">
+                  <div className="card shadow p-4">
+                    <h5 className="mb-3 text-gray-800">Đối tác giao hàng</h5>
 
-              <div className="card shadow p-4 mb-3">
-                <h5 className="mb-3 text-gray-800">Đối tác giao hàng</h5>
-
-                <DeliveryPartner order={order} getOrder={getOrder} />
+                    <DeliveryPartner order={order} getOrder={getOrder} />
+                  </div>
+                </div>
               </div>
             </div>
           </div>

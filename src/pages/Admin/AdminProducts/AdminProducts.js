@@ -11,7 +11,9 @@ import RemoveFilter from "~/components/Filter/RemoveFilter";
 import Pagination from "~/components/Pagination/Pagination";
 import adminRoutes from "~/routes/adminRoutes";
 import activeProductFilterData from "~/data/activeProductFilter.json";
+import productInStockFilterData from "~/data/productInStockFilterData.json";
 import { toast } from "react-toastify";
+import ArrowPagination from "~/components/Pagination/ArrowPagination";
 
 function AdminProducts() {
   document.title = "Quản lý sản phẩm";
@@ -23,7 +25,7 @@ function AdminProducts() {
   const [categories, setCategories] = useState();
   const [brands, setBrands] = useState();
   let location = useLocation();
-  const PAGE_SIZE = 15;
+  const PAGE_SIZE = 12;
 
   const handleChangeActive = async (e, id) => {
     setLoadingActive(true);
@@ -119,6 +121,14 @@ function AdminProducts() {
               valueKey={"value"}
             />
 
+            <FilterDropdown
+              filterList={productInStockFilterData}
+              filterName={"Tình trạng hàng"}
+              filterKey={"inStock"}
+              displayKey={"name"}
+              valueKey={"value"}
+            />
+
             <RemoveFilter />
 
             <div className="remove-filter">
@@ -151,10 +161,10 @@ function AdminProducts() {
         <div className="card shadow mb-4">
           {productsResponse?.content?.length != 0 ? (
             <>
-              <div className="d-flex justify-content-end mt-3 mb-1 px-4">
-                <Pagination pageData={productsResponse} />
+              <div className="d-flex justify-content-end mt-3 px-4">
+                <ArrowPagination pageData={productsResponse} />
               </div>
-              <div className="table-responsive rounded px-4 py-0">
+              <div className="px-4 py-0">
                 <table
                   className="table table-hover"
                   id="dataTable"
@@ -304,6 +314,10 @@ function AdminProducts() {
                     </>
                   )}
                 </table>
+              </div>
+
+              <div className="pagination d-flex justify-content-center py-2">
+                <Pagination pageData={productsResponse} />
               </div>
             </>
           ) : (

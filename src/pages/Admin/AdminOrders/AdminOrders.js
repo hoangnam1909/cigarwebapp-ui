@@ -17,6 +17,7 @@ import adminRoutes from "~/routes/adminRoutes";
 import { toVND } from "~/utils/NumberFormatter";
 import orderSortData from "~/data/orderSortData.json";
 import FilterDropdown from "~/components/Filter/FilterDropdown";
+import ArrowPagination from "~/components/Pagination/ArrowPagination";
 
 function AdminOrders() {
   document.title = "Quản lý đơn đặt hàng";
@@ -29,7 +30,7 @@ function AdminOrders() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
 
-  const PAGE_SIZE = 10;
+  const PAGE_SIZE = 12;
 
   const getOrderStatuses = async () => {
     const res = await orderStatusAPI.getOrderStatuses();
@@ -120,8 +121,8 @@ function AdminOrders() {
         <div className="card shadow mb-4">
           {ordersResponse?.content?.length != 0 ? (
             <>
-              <div className="d-flex justify-content-end mt-3 mb-1 px-4">
-                <Pagination pageData={ordersResponse} />
+              <div className="d-flex justify-content-end mt-3 px-4">
+                <ArrowPagination pageData={ordersResponse} />
               </div>
 
               <div className="px-4 py-0">
@@ -244,6 +245,10 @@ function AdminOrders() {
                     </>
                   )}
                 </table>
+              </div>
+
+              <div className="pagination d-flex justify-content-center py-2">
+                <Pagination pageData={ordersResponse} />
               </div>
             </>
           ) : (
