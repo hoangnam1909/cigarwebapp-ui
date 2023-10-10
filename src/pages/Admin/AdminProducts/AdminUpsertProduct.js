@@ -64,15 +64,12 @@ function AdminUpsertProduct() {
     }
 
     if (productId == null) {
-      console.log("add product");
       const res = await productAPI.addProduct(formData);
       if (res.status === 200) {
         navigate("/admin/products");
         toast.success("Thêm sản phẩm thành công.");
       }
     } else {
-      console.log("update product");
-      console.log(formData);
       const res = await productAPI.entireUpdateProduct(productId, formData);
       if (res.status === 200) {
         setReloadFlag(!reloadFlag);

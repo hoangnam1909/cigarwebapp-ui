@@ -57,7 +57,12 @@ function AppHeader() {
 
           {verifyToken() && tokenUserRole() === "ADMIN" ? (
             <div className="d-flex gap-2">
-              <Link to={"/admin"} className="btn btn-outline-dark px-3">
+              <Link
+                to={"/admin"}
+                target="_blank"
+                rel="noopener"
+                className="btn btn-outline-dark px-3"
+              >
                 <i className="fa-solid fa-user-gear me-2"></i>
                 Trang quản trị
               </Link>

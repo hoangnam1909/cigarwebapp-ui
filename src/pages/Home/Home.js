@@ -15,7 +15,6 @@ function Home() {
   useEffect(() => {
     const getProducts = async () => {
       const res = await productAPI.getProducts(null, 1, PRODUCT_SIZE);
-      console.log(res);
 
       if (res.status === 200) {
         setProducts(res.data.result);
@@ -34,7 +33,7 @@ function Home() {
             Chuyên kinh doanh Cigar Habanos Cuba nhập khẩu từ Châu Âu
           </h3>
           <div className="d-flex gap-3 justify-content-center lead fw-normal">
-            <Link to={"/san-pham"} className="icon-link">
+            <Link to={"/products"} className="icon-link">
               Mua ngay
               <i className="fa-solid fa-angle-right"></i>
             </Link>

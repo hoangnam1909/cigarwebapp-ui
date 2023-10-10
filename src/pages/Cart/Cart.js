@@ -36,6 +36,7 @@ function Cart() {
   const [cart, setCart] = useState();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [reloadFlag, setReloadFlag] = useState(false);
 
   const [orderRequest, setOrderRequest] = useState({
     fullName: "",
@@ -84,7 +85,7 @@ function Cart() {
     getProvinces();
     getPaymentDestinations();
     getProductsInCart();
-  }, []);
+  }, [reloadFlag]);
 
   useEffect(() => {
     if (province) {
@@ -137,19 +138,26 @@ function Cart() {
       orderItems: getOrderItems(),
     };
 
-    console.log("requestBody", requestBody);
-
     const addOrder = async () => {
       setIsSubmitting(true);
 
-      const res = await orderAPI.addOrder(requestBody);
-      if (res.status === 200) {
-        let result = res.data.result;
-
-        localStorage.setItem("cart", "[]");
-        setOrder(result);
-        toast.success("Đặt hàng thành công.");
-      } else {
+      try {
+        const res = await orderAPI.addOrder(requestBody);
+        if (res.status === 200) {
+          let result = res.data.result;
+          if (result != null) {
+            localStorage.setItem("cart", "[]");
+            setOrder(result);
+            toast.success("Đặt hàng thành công.");
+          } else {
+            toast.error("Đặt hàng không thành công.");
+            setReloadFlag(!reloadFlag);
+          }
+        }
+      } catch (error) {
+        console.log(error.response.data.result);
+        toast.error(error.response.data.result);
+        setReloadFlag(!reloadFlag);
       }
 
       setIsSubmitting(false);
@@ -168,7 +176,6 @@ function Cart() {
     return <EmptyCart />;
   }
 
-  console.log(cart);
   return (
     <>
       {cart != null ? (
@@ -194,7 +201,7 @@ function Cart() {
                             }}
                             required
                           />
-                          <label>Họ và tên (*)</label>
+                          <label>Tên người nhận hàng (*)</label>
                         </div>
                       </div>
 
@@ -445,16 +452,11 @@ function Cart() {
                               disabled={product.unitsInStock == 0}
                               value={product.quantity}
                               onChange={(e) => {
-                                if (e.target.value < 1)
-                                  updateQuantity(product.id, 1);
-                                else if (e.target.value > product.unitsInStock)
-                                  updateQuantity(
-                                    product.id,
-                                    product.unitsInStock
-                                  );
-                                else updateQuantity(product.id, e.target.value);
+                                updateQuantity(product.id, e.target.value);
                                 getProductsInCart();
                               }}
+                              onPaste={(e) => e.preventDefault()}
+                              onCopy={(e) => e.preventDefault()}
                             />
                             <a
                               className="w-100 text-center"

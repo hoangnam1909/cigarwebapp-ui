@@ -11,7 +11,6 @@ function PaymentReturnPage() {
 
   useEffect(() => {
     const params = queryString.parse(location.search);
-    console.log(params);
     const updatePaymentStatus = async () => {
       const res = await paymentAPI.updatePaymentStatus(
         params["requestId"],

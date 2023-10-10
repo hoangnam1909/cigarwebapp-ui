@@ -107,11 +107,11 @@ function ProductDetail() {
                   <div className="top-side">
                     {product.unitsInStock == 0 ? (
                       <div className="d-flex justify-content-between align-items-center">
-                        <p className="fs-6 badge text-bg-warning">Hết hàng</p>
+                        <p className="fs-5 badge text-bg-warning">Hết hàng</p>
                       </div>
                     ) : (
                       <div className="d-flex justify-content-between align-items-center">
-                        <p className="fs-6 badge bg-success">Còn hàng</p>
+                        <p className="fs-5 badge bg-success">Còn hàng</p>
                       </div>
                     )}
 
@@ -128,14 +128,14 @@ function ProductDetail() {
                     </div>
                   </div>
 
-                  <div className="bottom-side d-flex flex-column gap-2">
+                  <div className="bottom-side d-flex flex-column mt-3 gap-2">
                     <div className="prices">
                       {product.originalPrice != 0 ? (
                         <h3 className="mx-0 align-items-baseline">
-                          <span className="h6 text-decoration-line-through me-2">
+                          <span className="h5 text-decoration-line-through me-2">
                             {toVND(product?.originalPrice)}
                           </span>
-                          <span className="h6 text-danger">
+                          <span className="h5 text-danger">
                             Tiết kiệm{" "}
                             {toVND(product?.originalPrice - product.salePrice)}
                           </span>
@@ -143,13 +143,21 @@ function ProductDetail() {
                       ) : null}
 
                       {product.salePrice != 0 ? (
-                        <h3 className="text-danger me-2 mx-0 align-items-baseline">
+                        <h3 className="text-danger mx-0 align-items-baseline">
                           {toVND(product?.salePrice)}
                         </h3>
                       ) : null}
                     </div>
 
-                    <h5 className="card-title text-start text-primary lh-base mb-0">
+                    {product?.unitsInStock != 0 ? (
+                      <div className="quantity">
+                        <h5 className="mx-0 my-0 align-items-baseline">
+                          {product.unitsInStock} sản phẩm có sẵn
+                        </h5>
+                      </div>
+                    ) : null}
+
+                    <h5 className="card-title text-start text-primary lh-base mb-2">
                       Gọi điện trực tiếp:
                       <br />
                       <a

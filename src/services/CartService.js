@@ -43,14 +43,17 @@ export const getProductIdsCart = () => {
 export const updateCart = (productsInDB) => {
   let newCart = [];
   let cartItem;
-  let cart = JSON.parse(localStorage.getItem("cart"));
+  let localCart = JSON.parse(localStorage.getItem("cart"));
 
   productsInDB = productsInDB.forEach((p) => {
-    cartItem = cart.find((c) => c.id == p.id);
+    cartItem = localCart.find((c) => c.id == p.id);
     if (cartItem != null) {
       newCart.push({
         id: p.id,
-        quantity: cartItem.quantity,
+        quantity:
+          cartItem.quantity > p.unitsInStock
+            ? p.unitsInStock
+            : cartItem.quantity,
       });
     }
   });

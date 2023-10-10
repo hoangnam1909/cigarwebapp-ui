@@ -18,17 +18,21 @@ import { toVND } from "~/utils/NumberFormatter";
 import orderSortData from "~/data/orderSortData.json";
 import FilterDropdown from "~/components/Filter/FilterDropdown";
 import ArrowPagination from "~/components/Pagination/ArrowPagination";
+import ReloadData from "~/components/Filter/ReloadData";
 
 function AdminOrders() {
   document.title = "Quản lý đơn đặt hàng";
 
+  let location = useLocation();
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [reloadFlag, setReloadFlag] = useState(false);
+
   const [ordersResponse, setOrdersResponse] = useState();
   const [orderStatuses, setOrderStatuses] = useState();
   const [deliveryCompanies, setDeliveryCompanies] = useState();
-  const navigate = useNavigate();
-  let location = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [loading, setLoading] = useState(false);
 
   const PAGE_SIZE = 12;
 
@@ -51,7 +55,7 @@ function AdminOrders() {
     const params = queryString.parse(location.search);
 
     const getOrders = async () => {
-      setLoading(true);
+      setIsLoading(true);
       const res = await orderAPI.getAdminOrders(
         params,
         searchParams.get("page") ? parseInt(searchParams.get("page")) : 1,
@@ -59,12 +63,13 @@ function AdminOrders() {
       );
       if (res.status === 200) {
         setOrdersResponse(res.data.result);
-        setLoading(false);
       }
+
+      setIsLoading(false);
     };
 
     getOrders();
-  }, [searchParams]);
+  }, [searchParams, reloadFlag]);
 
   return (
     <>
@@ -101,6 +106,8 @@ function AdminOrders() {
 
             <RemoveFilter />
 
+            <ReloadData reloadFlag={reloadFlag} setReloadFlag={setReloadFlag} />
+
             {/* <div className="">
               <div className="btn-group">
                 <div className="btn-group" role="group">
@@ -119,40 +126,36 @@ function AdminOrders() {
         </div>
 
         <div className="card shadow mb-4">
-          {ordersResponse?.content?.length != 0 ? (
-            <>
-              <div className="d-flex justify-content-end mt-3 px-4">
-                <ArrowPagination pageData={ordersResponse} />
-              </div>
+          <div className="d-flex justify-content-end mt-3 px-4">
+            <ArrowPagination pageData={ordersResponse} />
+          </div>
 
-              <div className="px-4 py-0">
-                <table
-                  className="table table-hover"
-                  width="100%"
-                  cellSpacing="0"
-                >
-                  <thead>
-                    <tr>
-                      <th style={{ width: "5%" }} className="">
-                        ID
-                      </th>
-                      <th style={{ width: "20%" }} className="">
-                        Khách hàng
-                      </th>
-                      <th style={{ width: "10%" }} className="">
-                        Tổng tiền
-                      </th>
-                      <th style={{ width: "20%" }}>Ngày đặt hàng</th>
-                      <th style={{ width: "15%" }}>Trạng thái</th>
-                      <th style={{ width: "15%" }}>Đối tác giao hàng</th>
-                      <th style={{ width: "10%" }}>Mã vận đơn</th>
-                      <th style={{ width: "5%" }}></th>
-                    </tr>
-                  </thead>
+          <div className="px-4 py-0">
+            <table className="table table-hover" width="100%" cellSpacing="0">
+              <thead>
+                <tr>
+                  <th style={{ width: "5%" }} className="">
+                    ID
+                  </th>
+                  <th style={{ width: "20%" }} className="">
+                    Khách hàng
+                  </th>
+                  <th style={{ width: "10%" }} className="">
+                    Tổng tiền
+                  </th>
+                  <th style={{ width: "20%" }}>Ngày đặt hàng</th>
+                  <th style={{ width: "15%" }}>Trạng thái</th>
+                  <th style={{ width: "15%" }}>Đối tác giao hàng</th>
+                  <th style={{ width: "10%" }}>Mã vận đơn</th>
+                  <th style={{ width: "5%" }}></th>
+                </tr>
+              </thead>
 
-                  {ordersResponse ? (
-                    <>
-                      <tbody>
+              {!isLoading ? (
+                <>
+                  <tbody>
+                    {ordersResponse?.content?.length != 0 ? (
+                      <>
                         {ordersResponse?.content?.map((order) => (
                           <tr
                             key={order.id}
@@ -227,39 +230,45 @@ function AdminOrders() {
                             </td>
                           </tr>
                         ))}
-                      </tbody>
-                    </>
-                  ) : (
-                    <>
-                      <tbody>
-                        <tr>
-                          <td colSpan={8} className="text-center py-5">
-                            <div
-                              className="spinner-border"
-                              style={{ width: "3rem", height: "3rem" }}
-                              role="status"
-                            ></div>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </>
-                  )}
-                </table>
-              </div>
+                      </>
+                    ) : (
+                      <tr>
+                        <td colSpan={8} className="text-center py-3">
+                          <div
+                            className="alert alert-danger d-flex align-items-center mt-3 mx-3 py-4"
+                            role="alert"
+                          >
+                            <p className="text-center w-100 m-0">
+                              <i className="fa-solid fa-square-xmark me-2"></i>
+                              Không có kết quả nào trùng khớp
+                            </p>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </>
+              ) : (
+                <>
+                  <tbody>
+                    <tr>
+                      <td colSpan={8} className="text-center py-5">
+                        <div
+                          className="spinner-border"
+                          style={{ width: "3rem", height: "3rem" }}
+                          role="status"
+                        ></div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </>
+              )}
+            </table>
+          </div>
 
-              <div className="pagination d-flex justify-content-center py-2">
-                <Pagination pageData={ordersResponse} />
-              </div>
-            </>
-          ) : (
-            <div
-              className="alert alert-danger d-flex align-items-center mt-3 mx-3"
-              role="alert"
-            >
-              <i className="fa-solid fa-square-xmark me-2"></i>
-              <div>Không có kết quả nào trùng khớp</div>
-            </div>
-          )}
+          <div className="pagination d-flex justify-content-center py-2">
+            <Pagination pageData={ordersResponse} />
+          </div>
         </div>
       </div>
     </>

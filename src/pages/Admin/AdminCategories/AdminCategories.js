@@ -1,7 +1,11 @@
 import queryString from "query-string";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import categoryAPI from "~/apis/categoryAPI/categoryAPI";
+import FilterText from "~/components/Filter/FilterText";
+import ReloadData from "~/components/Filter/ReloadData";
+import RemoveFilter from "~/components/Filter/RemoveFilter";
 import ArrowPagination from "~/components/Pagination/ArrowPagination";
 import Pagination from "~/components/Pagination/Pagination";
 import adminRoutes from "~/routes/adminRoutes";
@@ -9,12 +13,14 @@ import adminRoutes from "~/routes/adminRoutes";
 function AdminCategories() {
   document.title = "Quản lý danh mục";
 
-  const [dataImpact, setDataImpact] = useState(0);
-  const [categoriesResponse, setCategoriesResponse] = useState();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [keyword, setKeyword] = useState();
-  const [loading, setLoading] = useState(false);
   let location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [reloadFlag, setReloadFlag] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const [categoriesResponse, setCategoriesResponse] = useState();
+  const [keyword, setKeyword] = useState();
   const PAGE_SIZE = 12;
 
   const handleDelete = async (id) => {
@@ -22,9 +28,10 @@ function AdminCategories() {
     if (confirmDelete == true) {
       const res = await categoryAPI.deleteCategory(id);
       if (res.status === 200) {
-        setDataImpact((dataImpact) => {
-          return dataImpact + 1;
-        });
+        setReloadFlag(!reloadFlag);
+        toast.success("Xoá thành công danh mục");
+      } else {
+        toast.error("Xoá không thành công danh mục");
       }
     }
   };
@@ -38,12 +45,13 @@ function AdminCategories() {
       const res = await categoryAPI.getAdminCategories(params);
       if (res.status === 200) {
         setCategoriesResponse(res.data.result);
-        setLoading(false);
       }
+
+      setLoading(false);
     };
 
     getCategories();
-  }, [dataImpact, searchParams]);
+  }, [searchParams, reloadFlag]);
 
   return (
     <>
@@ -52,47 +60,11 @@ function AdminCategories() {
 
         <div className="mb-4">
           <div className="d-flex flex-wrap gap-2">
-            <div
-              className="search-box border rounded"
-              style={{ width: "370px" }}
-            >
-              <div className="input-group flex-nowrap">
-                <input
-                  type="text"
-                  className="form-control border-0 outline-none"
-                  placeholder="Tìm kiếm danh mục"
-                  value={keyword}
-                  onChange={(e) => {
-                    setKeyword(e.target.value);
-                    setTimeout(() => {
-                      searchParams.delete("page");
-                      if (e.target.value.length == 0) {
-                        searchParams.delete("kw");
-                        setSearchParams(searchParams);
-                      } else {
-                        searchParams.set("kw", `${e.target.value}`);
-                        setSearchParams(searchParams);
-                      }
-                    }, 800);
-                  }}
-                />
-              </div>
-            </div>
+            <FilterText filterName={"Tìm kiếm danh mục"} filterKey={"kw"} />
 
-            <div className="filter-dropdown">
-              <a
-                type="button"
-                className="btn btn-danger px-5"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setSearchParams();
-                  setKeyword("");
-                }}
-              >
-                <i className="fa-solid fa-filter-circle-xmark me-2"></i>
-                Loại bỏ bộ lọc
-              </a>
-            </div>
+            <RemoveFilter />
+
+            <ReloadData reloadFlag={reloadFlag} setReloadFlag={setReloadFlag} />
 
             <div className="">
               <div className="btn-group">
@@ -133,49 +105,69 @@ function AdminCategories() {
               {!loading ? (
                 <>
                   <tbody>
-                    {categoriesResponse?.content?.map((category, index) => (
-                      <tr key={index}>
-                        <td className="align-middle fw-bolder">
-                          #{category.id}
-                        </td>
-                        <td className="align-middle">{category.name}</td>
-                        <td className="align-middle">
-                          <div className="d-flex flex-row justify-content-center">
-                            <div className="btn-group">
-                              <a
-                                className="btn rounded border-0"
-                                style={{ cursor: "pointer" }}
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                              >
-                                <i className="fa-solid fa-ellipsis"></i>
-                              </a>
-                              <ul className="dropdown-menu">
-                                <li>
-                                  <Link
-                                    className="dropdown-item"
-                                    to={`${adminRoutes.adminEditCategory}/${category.id}`}
+                    {categoriesResponse?.numberOfElements != 0 ? (
+                      <>
+                        {categoriesResponse?.content?.map((category, index) => (
+                          <tr key={index}>
+                            <td className="align-middle fw-bolder">
+                              #{category.id}
+                            </td>
+                            <td className="align-middle">{category.name}</td>
+                            <td className="align-middle">
+                              <div className="d-flex flex-row justify-content-center">
+                                <div className="btn-group">
+                                  <a
+                                    className="btn rounded border-0"
+                                    style={{ cursor: "pointer" }}
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
                                   >
-                                    Sửa
-                                  </Link>
-                                </li>
-                                <li>
-                                  <hr className="dropdown-divider" />
-                                </li>
-                                <li>
-                                  <Link
-                                    className="dropdown-item text-danger"
-                                    onClick={() => handleDelete(category.id)}
-                                  >
-                                    Xoá
-                                  </Link>
-                                </li>
-                              </ul>
-                            </div>
+                                    <i className="fa-solid fa-ellipsis"></i>
+                                  </a>
+                                  <ul className="dropdown-menu">
+                                    <li>
+                                      <Link
+                                        className="dropdown-item"
+                                        to={`${adminRoutes.adminEditCategory}/${category.id}`}
+                                      >
+                                        Sửa
+                                      </Link>
+                                    </li>
+                                    <li>
+                                      <hr className="dropdown-divider" />
+                                    </li>
+                                    <li>
+                                      <Link
+                                        className="dropdown-item text-danger"
+                                        onClick={() =>
+                                          handleDelete(category.id)
+                                        }
+                                      >
+                                        Xoá
+                                      </Link>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </>
+                    ) : (
+                      <tr>
+                        <td colSpan={9} className="text-center py-3">
+                          <div
+                            className="alert alert-danger d-flex align-items-center mt-3 mx-3 py-4"
+                            role="alert"
+                          >
+                            <p className="text-center w-100 m-0">
+                              <i className="fa-solid fa-square-xmark me-2"></i>
+                              Không có kết quả nào trùng khớp
+                            </p>
                           </div>
                         </td>
                       </tr>
-                    ))}
+                    )}
                   </tbody>
                 </>
               ) : (
