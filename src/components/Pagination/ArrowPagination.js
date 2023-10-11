@@ -6,7 +6,7 @@ function ArrowPagination({ pageData }) {
   const totalPages = pageData?.totalPages;
 
   return (
-    <nav className="d-flex gap-4 mb-3">
+    <nav className="d-flex gap-3 mb-3">
       <h5 className="mb-0 align-self-center">
         <span className="text-primary">{currentPage}</span>
         {"/"}

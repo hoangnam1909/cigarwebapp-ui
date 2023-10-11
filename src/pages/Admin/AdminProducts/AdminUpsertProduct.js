@@ -293,11 +293,10 @@ function AdminUpsertProduct() {
             >
               {isLoading ? (
                 <span className="spinner-border me-2" aria-hidden="true"></span>
-              ) : (
-                <span role="status">
-                  {productId ? "Sửa thông tin sản phẩm" : "Thêm sản phẩm"}
-                </span>
-              )}
+              ) : null}
+              <span role="status">
+                {productId ? "Sửa thông tin sản phẩm" : "Thêm sản phẩm"}
+              </span>
             </button>
           </form>
         </div>

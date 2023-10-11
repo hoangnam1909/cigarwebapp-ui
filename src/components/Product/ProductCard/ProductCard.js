@@ -5,8 +5,14 @@ import { rewriteUrl } from "~/utils/UrlRewrite";
 
 function ProductCard({ product }) {
   return (
-    <div className="card shadow-sm h-100">
+    <div className="card shadow-sm h-100 position-relative">
       <Link to={`/products/${rewriteUrl(product.name)}-${product.id}`}>
+        {product.unitsInStock == 0 ? (
+          <h5 className="out-of-stock d-inline position-absolute ">
+            <span class="badge bg-danger">Hết hàng</span>
+          </h5>
+        ) : null}
+
         <img
           src={product.productImages[0]?.linkToImage}
           alt={`${product.name} image`}

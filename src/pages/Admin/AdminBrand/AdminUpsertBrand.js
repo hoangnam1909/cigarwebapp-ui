@@ -165,11 +165,10 @@ function AdminUpsertBrand() {
                     className="spinner-border me-2"
                     aria-hidden="true"
                   ></span>
-                ) : (
-                  <span role="status">
-                    {brandId ? "Lưu các thay đổi" : "Thêm thương hiệu"}
-                  </span>
-                )}
+                ) : null}
+                <span role="status">
+                  {brandId ? "Lưu các thay đổi" : "Thêm thương hiệu"}
+                </span>
               </button>
             </form>
           </div>

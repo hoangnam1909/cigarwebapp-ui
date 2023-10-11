@@ -2,6 +2,7 @@ import queryString from "query-string";
 import { useEffect, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import brandAPI from "~/apis/brandAPI/brandAPI";
+import Alert from "~/components/Alert/Alert";
 import FilterText from "~/components/Filter/FilterText";
 import ReloadData from "~/components/Filter/ReloadData";
 import RemoveFilter from "~/components/Filter/RemoveFilter";
@@ -130,15 +131,7 @@ function AdminBrand() {
                     ) : (
                       <tr>
                         <td colSpan={4} className="text-center py-3">
-                          <div
-                            className="alert alert-danger d-flex align-items-center mt-3 mx-3 py-4"
-                            role="alert"
-                          >
-                            <p className="text-center w-100 m-0">
-                              <i className="fa-solid fa-square-xmark me-2"></i>
-                              Không có kết quả nào trùng khớp
-                            </p>
-                          </div>
+                          <Alert type={"danger"} message={"Không có kết quả"} />
                         </td>
                       </tr>
                     )}

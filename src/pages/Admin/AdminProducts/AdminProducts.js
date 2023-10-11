@@ -15,6 +15,7 @@ import productInStockFilterData from "~/data/productInStockFilterData.json";
 import { toast } from "react-toastify";
 import ArrowPagination from "~/components/Pagination/ArrowPagination";
 import ReloadData from "~/components/Filter/ReloadData";
+import Alert from "~/components/Alert/Alert";
 
 function AdminProducts() {
   document.title = "Quản lý sản phẩm";
@@ -291,15 +292,7 @@ function AdminProducts() {
                     ) : (
                       <tr>
                         <td colSpan={9} className="text-center py-3">
-                          <div
-                            className="alert alert-danger d-flex align-items-center mt-3 mx-3 py-4"
-                            role="alert"
-                          >
-                            <p className="text-center w-100 m-0">
-                              <i className="fa-solid fa-square-xmark me-2"></i>
-                              Không có kết quả nào trùng khớp
-                            </p>
-                          </div>
+                          <Alert type={"danger"} message={"Không có kết quả"} />
                         </td>
                       </tr>
                     )}

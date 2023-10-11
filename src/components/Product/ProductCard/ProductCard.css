@@ -6,3 +6,8 @@
   line-clamp: 2;
   -webkit-box-orient: vertical;
 }
+
+.out-of-stock {
+  top: 3px;
+  right: 5px;
+}

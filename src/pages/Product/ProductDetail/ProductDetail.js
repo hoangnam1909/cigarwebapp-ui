@@ -104,7 +104,7 @@ function ProductDetail() {
 
               <div className="col-12 col-md-5 d-flex flex-column justify-content-between">
                 <div className="d-flex flex-column justify-content-between h-100 px-3 py-3">
-                  <div className="top-side">
+                  <div className="upper-panel">
                     {product.unitsInStock == 0 ? (
                       <div className="d-flex justify-content-between align-items-center">
                         <p className="fs-5 badge text-bg-warning">Hết hàng</p>
@@ -123,7 +123,7 @@ function ProductDetail() {
                           }}
                         />
                       ) : (
-                        "Mô tả sản phẩm"
+                        "Không có mô tả"
                       )}
                     </div>
                   </div>

@@ -4,9 +4,11 @@ import { useLocation, useSearchParams } from "react-router-dom";
 import brandAPI from "~/apis/brandAPI/brandAPI";
 import categoryAPI from "~/apis/categoryAPI/categoryAPI";
 import productAPI from "~/apis/productAPI/productAPI";
+import Alert from "~/components/Alert/Alert";
 import FilterDropdown from "~/components/Filter/FilterDropdown";
 import FilterText from "~/components/Filter/FilterText";
 import RemoveFilter from "~/components/Filter/RemoveFilter";
+import ArrowPagination from "~/components/Pagination/ArrowPagination";
 import Pagination from "~/components/Pagination/Pagination";
 import ProductCard from "~/components/Product/ProductCard/ProductCard";
 import ProductCardSkeletonView from "~/components/Skeleton/ProductCardSkeletonView/ProductCardSkeletonView";
@@ -15,8 +17,10 @@ import sortData from "~/data/productSortData.json";
 function ProductsView() {
   document.title = "Các sản phẩm";
 
-  const [searchParams, setSearchParams] = useSearchParams();
   let location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const [categories, setCategories] = useState();
   const [brands, setBrands] = useState();
@@ -41,6 +45,7 @@ function ProductsView() {
   const getProducts = async () => {
     const params = queryString.parse(location.search);
 
+    setIsLoading(true);
     const res = await productAPI.getProducts(
       params,
       searchParams.get("page"),
@@ -49,6 +54,7 @@ function ProductsView() {
     if (res.status === 200) {
       setProductsResponse(res.data.result);
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -63,7 +69,7 @@ function ProductsView() {
   return (
     <>
       <div className="box-filter mb-3">
-        <section className="d-flex flex-wrap gap-2">
+        <section className="d-flex flex-wrap gap-2  justify-content-center justify-content-md-start">
           <FilterText filterName={"Tìm kiếm sản phẩm"} filterKey={"kw"} />
 
           <FilterDropdown
@@ -87,15 +93,15 @@ function ProductsView() {
       </div>
 
       <div className="box-sorting mb-3">
-        <section className="d-flex flex-wrap justify-content-between">
-          <div className="w-50 left-panel-sorting align-self-end">
+        <section className="d-flex flex-wrap column-gap-3 row-gap-1 justify-content-center justify-content-md-between">
+          <div className="left-panel-sorting align-self-center">
             <h5 className="">
               {productsResponse == null || productsResponse?.totalElements == 0
                 ? "Không có sản phẩm nào được tìm thấy"
                 : `${productsResponse?.totalElements} Sản phẩm được tìm thấy`}
             </h5>
           </div>
-          <div className="w-50 right-panel-sorting text-end">
+          <div className="d-flex justify-content-end gap-4 right-panel-sorting text-end">
             <FilterDropdown
               filterList={sortData}
               filterName={"Sắp xếp"}
@@ -103,26 +109,34 @@ function ProductsView() {
               displayKey={"name"}
               valueKey={"value"}
             />
+
+            <ArrowPagination pageData={productsResponse} />
           </div>
         </section>
       </div>
 
-      {productsResponse ? (
+      {!isLoading ? (
         <>
           <div className="product-box mb-3">
-            <div className="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6 g-1 mb-3">
-              {productsResponse?.content?.map((product) => {
-                return (
-                  <div key={product.id} className="col">
-                    <ProductCard product={product} />
-                  </div>
-                );
-              })}
-            </div>
+            {productsResponse?.numberOfElements != 0 ? (
+              <>
+                <div className="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6 g-1 mb-3">
+                  {productsResponse?.content?.map((product) => {
+                    return (
+                      <div key={product.id} className="col">
+                        <ProductCard product={product} />
+                      </div>
+                    );
+                  })}
+                </div>
 
-            <div className="pagination d-flex justify-content-center">
-              <Pagination pageData={productsResponse} />
-            </div>
+                <div className="pagination d-flex justify-content-center">
+                  <Pagination pageData={productsResponse} />
+                </div>
+              </>
+            ) : (
+              <Alert type={"danger"} message={"Không có kết quả"} />
+            )}
           </div>
         </>
       ) : (

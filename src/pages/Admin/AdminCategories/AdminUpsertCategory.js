@@ -98,11 +98,10 @@ function AdminUpsertCategory() {
                     className="spinner-border me-2"
                     aria-hidden="true"
                   ></span>
-                ) : (
-                  <span role="status">
-                    {categoryId ? "Lưu các thay đổi" : "Thêm danh mục"}
-                  </span>
-                )}
+                ) : null}
+                <span role="status">
+                  {categoryId ? "Lưu các thay đổi" : "Thêm danh mục"}
+                </span>
               </button>
             </form>
           </div>
