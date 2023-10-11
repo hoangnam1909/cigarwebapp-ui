@@ -2,6 +2,7 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import orderAPI from "~/apis/orderAPI/orderAPI";
+import paymentAPI from "~/apis/paymentAPI/paymentAPI";
 import DeliveryPartner from "~/components/Order/DeliveryPartner";
 import OrderStatusForm from "~/components/Order/OrderStatusForm";
 import { toVND } from "~/utils/NumberFormatter";
@@ -9,6 +10,9 @@ import { formatPhoneNumber } from "~/utils/StringFormatter";
 
 function AdminUpsertOrder() {
   const { orderId } = useParams();
+
+  const [reloadFlag, setReloadFlag] = useState(false);
+  const [paymentLoading, setPaymentLoading] = useState(false);
 
   document.title = `${
     orderId == null ? "Thêm đơn hàng" : `Chỉnh sửa đơn hàng #${orderId}`
@@ -21,9 +25,17 @@ function AdminUpsertOrder() {
     if (res.status === 200) setOrder(res.data.result);
   };
 
+  const updatePayment = async () => {
+    const res = await paymentAPI.adminUpdatePaymentStatus(orderId);
+    if (res.status === 200) {
+      setReloadFlag(!reloadFlag);
+    }
+  };
+
   useEffect(() => {
+    console.log("Get order");
     getOrder();
-  }, []);
+  }, [reloadFlag]);
 
   if (order) {
     return (
@@ -42,7 +54,7 @@ function AdminUpsertOrder() {
                   </h5>
                   <h6 className="mb-1">
                     Tình trạng:{" "}
-                    <span className="text-danger">
+                    <span className="text-primary">
                       {order.orderStatus?.name}
                     </span>
                   </h6>
@@ -52,7 +64,7 @@ function AdminUpsertOrder() {
                   <div className="col d-flex mb-3 overflow-wrap">
                     <div className="customer-icon me-2">
                       <i
-                        class="fa-solid fa-user mt-1"
+                        className="fa-solid fa-user mt-1"
                         style={{ height: "30px" }}
                       ></i>
                     </div>
@@ -79,7 +91,7 @@ function AdminUpsertOrder() {
                   <div className="col d-flex mb-3">
                     <div className="customer-icon me-2">
                       <i
-                        class="fa-solid fa-truck mt-1"
+                        className="fa-solid fa-truck mt-1"
                         style={{ height: "30px" }}
                       ></i>
                     </div>
@@ -97,7 +109,7 @@ function AdminUpsertOrder() {
                   <div className="col d-flex mb-3">
                     <div className="customer-icon me-2">
                       <i
-                        class="fa-regular fa-credit-card mt-1"
+                        className="fa-regular fa-credit-card mt-1"
                         style={{ height: "30px" }}
                       ></i>
                     </div>
@@ -107,13 +119,26 @@ function AdminUpsertOrder() {
                       <p className="mb-0">
                         {order.payment?.paymentDestination.name}
                       </p>
-                      <p className="mb-0">
-                        {order.payment?.isPaid ? (
-                          <span className="text-success">Đã thanh toán</span>
-                        ) : (
-                          <span className="text-danger">Chưa thanh toán</span>
-                        )}
-                      </p>
+
+                      {order.payment?.isPaid ? (
+                        <>
+                          <p className="text-success mb-0">Đã thanh toán</p>
+                        </>
+                      ) : (
+                        <>
+                          <p className="text-danger mb-0">Chưa thanh toán</p>
+                          <a
+                            className="btn btn-outline-danger w-100 px-3 mt-1"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              updatePayment();
+                            }}
+                          >
+                            <i className="fa-solid fa-rotate-right me-2"></i>
+                            Cập nhật kết quả
+                          </a>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -173,13 +198,10 @@ function AdminUpsertOrder() {
                                 {orderItem.quantity}
                               </td>
                               <td className="text-end align-middle">
-                                {toVND(orderItem.product.salePrice)}
+                                {toVND(orderItem?.price)}
                               </td>
                               <td className="text-end align-middle">
-                                {toVND(
-                                  orderItem.quantity *
-                                    orderItem.product.salePrice
-                                )}
+                                {toVND(orderItem.quantity * orderItem?.price)}
                               </td>
                             </tr>
                           );

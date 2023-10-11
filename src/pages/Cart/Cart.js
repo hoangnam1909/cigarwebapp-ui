@@ -452,7 +452,14 @@ function Cart() {
                               disabled={product.unitsInStock == 0}
                               value={product.quantity}
                               onChange={(e) => {
-                                updateQuantity(product.id, e.target.value);
+                                console.log(typeof e.target.value);
+                                updateQuantity(
+                                  product.id,
+                                  e.target.value.trim().length == 0 ||
+                                    e.target.value.trim() == 0
+                                    ? 1
+                                    : e.target.value
+                                );
                                 getProductsInCart();
                               }}
                               onPaste={(e) => e.preventDefault()}

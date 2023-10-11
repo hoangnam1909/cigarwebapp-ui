@@ -1,14 +1,14 @@
 function ListImagePreview({ imageList }) {
   return (
     <>
-      <div className="d-flex flex-wrap">
+      <div className="d-flex flex-wrap py-2 gap-1 ">
         {imageList?.map((image, index) => {
           return (
             <img
               key={index}
               src={image}
-              style={{ height: "200px", objectFit: "cover" }}
-              className="m-1 border rounded"
+              style={{ height: "200px" }}
+              className="border rounded object-fit-cover"
             />
           );
         })}

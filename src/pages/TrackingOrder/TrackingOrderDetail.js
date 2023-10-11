@@ -198,12 +198,15 @@ function TrackingOrderDetail({ order, setOrder }) {
                   <div className="w-100 mb-3 mb-sm-0">
                     <Link to={`/products/${orderItem.product.id}`}>
                       <h6>{orderItem.product.name}</h6>
-                      <p className="form-text mb-2">
+                      <p className="form-text mt-0 mb-2">
                         {`Giá sản phẩm: ${
-                          orderItem.product.salePrice === 0
+                          orderItem?.price === 0
                             ? "Liên hệ"
-                            : toVND(orderItem.product.salePrice)
+                            : toVND(orderItem?.price)
                         }`}
+                      </p>
+                      <p className="form-text mt-0 mb-2">
+                        {`Số lượng: ${orderItem?.quantity}`}
                       </p>
                     </Link>
                   </div>

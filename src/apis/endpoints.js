@@ -26,4 +26,6 @@ export let privateEndpoints = {
   orderStatuses: "/admin/order-statuses",
   orderStatus: "/admin/order-statuses",
   deliveryCompanies: "/admin/delivery-companies",
+  payments: "/admin/payments",
+  updatePaymentStatus: "/admin/payments/update-payment-status",
 };

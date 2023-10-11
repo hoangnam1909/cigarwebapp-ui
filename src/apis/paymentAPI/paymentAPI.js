@@ -1,5 +1,6 @@
+import axiosAuth from "../axiosAuth";
 import axiosClient from "../axiosClient";
-import { publicEndpoints } from "../endpoints";
+import { privateEndpoints, publicEndpoints } from "../endpoints";
 
 const paymentAPI = {
   updatePaymentStatus: (requestId, paymentOrderId) => {
@@ -8,6 +9,12 @@ const paymentAPI = {
       requestId: requestId,
       paymentOrderId: paymentOrderId,
     });
+  },
+
+  // ADMIN
+  adminUpdatePaymentStatus: (orderId) => {
+    const url = `${privateEndpoints.updatePaymentStatus}/${orderId}`;
+    return axiosAuth.patch(url);
   },
 };
 

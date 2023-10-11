@@ -11,7 +11,7 @@ function AppHeader() {
       data-bs-theme="light"
     >
       <div className="container">
-        <Link to="/" className="navbar-brand">
+        <Link to="/" className="navbar-brand fw-medium">
           <img
             src="https://res.cloudinary.com/nhn1909/image/upload/v1690041731/ktypjs6ap3ykjv6eydqu.png"
             alt="Bootstrap"

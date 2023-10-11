@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
 import "./Home.css";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import specs from "~/data/specs.json";
 import productAPI from "~/apis/productAPI/productAPI";
@@ -26,8 +26,8 @@ function Home() {
 
   return (
     <>
-      <div className="product-thumbnail position-relative overflow-hidden mt-3 mb-4 p-5 text-center bg-body-tertiary rounded">
-        <div className="col-md-6 p-lg-5 mx-auto my-5">
+      <div className="product-thumbnail overflow-hidden mt-3 mb-4 py-5 text-center bg-body-tertiary rounded">
+        <div className="p-lg-5 mx-auto my-5">
           <h1 className="display-3 fw-bold">Cigar For Boss</h1>
           <h3 className="fw-normal mb-3">
             Chuyên kinh doanh Cigar Habanos Cuba nhập khẩu từ Châu Âu
@@ -35,7 +35,7 @@ function Home() {
           <div className="d-flex gap-3 justify-content-center lead fw-normal">
             <Link to={"/products"} className="icon-link">
               Mua ngay
-              <i className="fa-solid fa-angle-right"></i>
+              <i className="fa-solid fa-angle-right align-self-end"></i>
             </Link>
           </div>
         </div>
