@@ -155,7 +155,6 @@ function Cart() {
           }
         }
       } catch (error) {
-        console.log(error.response.data.result);
         toast.error("Sản phẩm bạn đặt đã hết hàng hoặc không còn khả dụng");
         setReloadFlag(!reloadFlag);
       }
@@ -452,7 +451,6 @@ function Cart() {
                               disabled={product.unitsInStock == 0}
                               value={product.quantity}
                               onChange={(e) => {
-                                console.log(typeof e.target.value);
                                 updateQuantity(
                                   product.id,
                                   e.target.value.trim().length == 0 ||

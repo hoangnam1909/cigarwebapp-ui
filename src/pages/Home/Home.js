@@ -26,7 +26,11 @@ function Home() {
 
   return (
     <>
-      <div className="product-thumbnail overflow-hidden mt-3 mb-4 py-5 text-center bg-body-tertiary rounded">
+      <div
+        className="product-thumbnail overflow-hidden mt-3 mb-4 py-5 text-center bg-body-tertiary rounded"
+        role="img"
+        aria-label="cigarforboss-home-image"
+      >
         <div className="p-lg-5 mx-auto my-5">
           <h1 className="display-3 fw-bold">Cigar For Boss</h1>
           <h3 className="fw-normal mb-3">

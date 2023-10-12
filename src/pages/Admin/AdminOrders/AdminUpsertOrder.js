@@ -1,6 +1,7 @@
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import orderAPI from "~/apis/orderAPI/orderAPI";
 import paymentAPI from "~/apis/paymentAPI/paymentAPI";
 import DeliveryPartner from "~/components/Order/DeliveryPartner";
@@ -12,7 +13,6 @@ function AdminUpsertOrder() {
   const { orderId } = useParams();
 
   const [reloadFlag, setReloadFlag] = useState(false);
-  const [paymentLoading, setPaymentLoading] = useState(false);
 
   document.title = `${
     orderId == null ? "Thêm đơn hàng" : `Chỉnh sửa đơn hàng #${orderId}`
@@ -26,14 +26,18 @@ function AdminUpsertOrder() {
   };
 
   const updatePayment = async () => {
-    const res = await paymentAPI.adminUpdatePaymentStatus(orderId);
-    if (res.status === 200) {
-      setReloadFlag(!reloadFlag);
+    try {
+      const res = await paymentAPI.adminUpdatePaymentStatus(orderId);
+      if (res.status === 200) {
+        toast.success("Đã cập nhật kết quả thanh toán");
+        setReloadFlag(!reloadFlag);
+      }
+    } catch (error) {
+      toast.error(error.response.data.result);
     }
   };
 
   useEffect(() => {
-    console.log("Get order");
     getOrder();
   }, [reloadFlag]);
 
@@ -127,16 +131,18 @@ function AdminUpsertOrder() {
                       ) : (
                         <>
                           <p className="text-danger mb-0">Chưa thanh toán</p>
-                          <a
-                            className="btn btn-outline-danger w-100 px-3 mt-1"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              updatePayment();
-                            }}
-                          >
-                            <i className="fa-solid fa-rotate-right me-2"></i>
-                            Cập nhật kết quả
-                          </a>
+                          {order.payment?.paymentDestination?.id != "cod" ? (
+                            <a
+                              className="btn btn-outline-danger w-100 px-3 mt-1"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                updatePayment();
+                              }}
+                            >
+                              <i className="fa-solid fa-rotate-right me-2"></i>
+                              Cập nhật kết quả
+                            </a>
+                          ) : null}
                         </>
                       )}
                     </div>

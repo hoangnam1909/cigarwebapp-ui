@@ -131,23 +131,23 @@ function AdminOrders() {
             <ArrowPagination pageData={ordersResponse} />
           </div>
 
-          <div className="px-4 py-0">
+          <div className="px-4 py-0 overflow-auto">
             <table className="table table-hover" width="100%" cellSpacing="0">
               <thead>
                 <tr>
                   <th style={{ width: "5%" }} className="">
                     ID
                   </th>
-                  <th style={{ width: "20%" }} className="">
+                  <th style={{ width: "18%" }} className="">
                     Khách hàng
                   </th>
                   <th style={{ width: "10%" }} className="">
                     Tổng tiền
                   </th>
-                  <th style={{ width: "20%" }}>Ngày đặt hàng</th>
-                  <th style={{ width: "15%" }}>Trạng thái</th>
+                  <th style={{ width: "16%" }}>Ngày đặt hàng</th>
+                  <th style={{ width: "10%" }}>Trạng thái</th>
                   <th style={{ width: "15%" }}>Đối tác giao hàng</th>
-                  <th style={{ width: "10%" }}>Mã vận đơn</th>
+                  <th style={{ width: "15%" }}>Thanh toán</th>
                   <th style={{ width: "5%" }}></th>
                 </tr>
               </thead>
@@ -160,7 +160,7 @@ function AdminOrders() {
                         {ordersResponse?.content?.map((order) => (
                           <tr
                             key={order.id}
-                            onDoubleClick={() => {
+                            onClick={() => {
                               navigate(
                                 `${adminRoutes.adminEditOrder}/${order.id}`
                               );
@@ -187,23 +187,8 @@ function AdminOrders() {
                             <td className="align-middle">
                               {order.shipment?.deliveryCompany?.name}
                             </td>
-                            <td
-                              className="align-middle"
-                              onClick={() => {
-                                if (order.shipment?.trackingNumber) {
-                                  navigator.clipboard.writeText(
-                                    order.shipment?.trackingNumber
-                                  );
-                                  alert("Đã sao chép mã vận đơn");
-                                }
-                              }}
-                            >
-                              {order.shipment?.trackingNumber ? (
-                                <>
-                                  <i className="fa-solid fa-copy me-2"></i>
-                                  {order.shipment?.trackingNumber}
-                                </>
-                              ) : null}
+                            <td className="align-middle">
+                              {order.payment?.paymentDestination?.name}
                             </td>
                             <td className="align-middle">
                               <div className="d-flex flex-row justify-content-center">
