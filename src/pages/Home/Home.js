@@ -15,7 +15,6 @@ function Home() {
   useEffect(() => {
     const getProducts = async () => {
       const res = await productAPI.getProducts(null, 1, PRODUCT_SIZE);
-
       if (res.status === 200) {
         setProducts(res.data.result);
       }
@@ -27,7 +26,7 @@ function Home() {
   return (
     <>
       <div
-        className="product-thumbnail overflow-hidden mt-3 mb-4 py-5 text-center bg-body-tertiary rounded"
+        className="product-thumbnail overflow-hidden mt-3 mb-3 py-5 text-center bg-body-tertiary rounded"
         role="img"
         aria-label="cigarforboss-home-image"
       >
@@ -45,7 +44,7 @@ function Home() {
         </div>
       </div>
 
-      <div className="row g-2 mb-4 pb-4 border-bottom">
+      <div className="row g-2 mb-3 pb-4 border-bottom">
         {specs.map((spec, index) => {
           return (
             <div key={index} className="col-12 col-md-4">

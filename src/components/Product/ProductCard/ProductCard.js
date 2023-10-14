@@ -9,7 +9,7 @@ function ProductCard({ product }) {
       <Link to={`/products/${rewriteUrl(product.name)}-${product.id}`}>
         {product.unitsInStock == 0 ? (
           <h5 className="out-of-stock d-inline position-absolute ">
-            <span class="badge bg-danger">Hết hàng</span>
+            <span className="badge bg-danger">Hết hàng</span>
           </h5>
         ) : null}
 

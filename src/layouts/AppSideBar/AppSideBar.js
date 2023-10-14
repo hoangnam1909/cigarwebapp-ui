@@ -24,10 +24,14 @@ function AppSideBar() {
       className="d-flex flex-column flex-shrink-0 p-3 shadow bg-white vh-100"
       style={{ width: "260px" }}
     >
-      <div className="sidebar-header text-center">
+      <div className="sidebar-header">
         <Link to={"/"} className="mb-3">
-          <i className="fa-solid fa-shield-halved fa-xl me-2"></i>
-          <span className="fs-4">Trang chủ</span>
+          <h3 className="">
+            <span>
+              <i className="fa-solid fa-shield-halved me-2"></i>
+            </span>
+            Trang chủ
+          </h3>
         </Link>
       </div>
       <hr />

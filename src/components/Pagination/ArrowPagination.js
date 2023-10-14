@@ -7,11 +7,13 @@ function ArrowPagination({ pageData }) {
 
   return (
     <nav className="d-flex gap-3 mb-3">
-      <h5 className="mb-0 align-self-center">
-        <span className="text-primary">{currentPage}</span>
-        {"/"}
-        {totalPages}
-      </h5>
+      {totalPages > 0 ? (
+        <h5 className="mb-0 align-self-center">
+          <span className="text-primary">{currentPage}</span>
+          {"/"}
+          {totalPages}
+        </h5>
+      ) : null}
 
       <ul className="pagination mb-0">
         <li className={`page-item ${pageData?.first ? "disabled" : ""} `}>

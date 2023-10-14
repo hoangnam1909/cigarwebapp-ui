@@ -10,7 +10,7 @@ function AppHeader() {
       className="navbar border-bottom navbar-expand-lg bg-white"
       data-bs-theme="light"
     >
-      <div className="container">
+      <div className="container px-1">
         <Link to="/" className="navbar-brand fw-medium">
           <img
             src="https://res.cloudinary.com/nhn1909/image/upload/v1690041731/ktypjs6ap3ykjv6eydqu.png"
@@ -34,14 +34,17 @@ function AppHeader() {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+        <div
+          className="collapse navbar-collapse pb-2 pb-lg-0"
+          id="navbarSupportedContent"
+        >
           <ul className="navbar-nav mx-auto mb-2 mb-lg-0">
             {headerRoutes.map((route, index) => {
               return (
                 <li key={index} className="nav-item">
                   <Link
                     to={route.path}
-                    className={`nav-link ${
+                    className={`nav-link px-2 ${
                       route.path != "/" && location.pathname == route.path
                         ? "active"
                         : ""
@@ -56,7 +59,7 @@ function AppHeader() {
           </ul>
 
           {verifyToken() && tokenUserRole() === "ADMIN" ? (
-            <div className="d-flex gap-2">
+            <div className="d-flex ps-2 gap-2">
               <Link
                 to={"/admin"}
                 target="_blank"

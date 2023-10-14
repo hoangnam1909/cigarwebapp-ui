@@ -183,7 +183,7 @@ function Cart() {
             <div className="row g-2 mb-3">
               <div className="col-sm-12 col-xl-7">
                 <div className="card px-4 py-3 h-100">
-                  <h5 className="mb-3">THÔNG TIN NGƯỜI MUA HÀNG</h5>
+                  <h5 className="mb-3">THÔNG TIN MUA HÀNG</h5>
                   <form onSubmit={handleSubmitForm}>
                     <div className="row g-2">
                       <div className="col-md">
@@ -200,7 +200,7 @@ function Cart() {
                             }}
                             required
                           />
-                          <label>Tên người nhận hàng (*)</label>
+                          <label>Người nhận hàng (*)</label>
                         </div>
                       </div>
 
@@ -426,7 +426,11 @@ function Cart() {
                           </div>
 
                           <div className="w-100 mb-3 mb-sm-0">
-                            <Link to={`/products/${product.id}`}>
+                            <Link
+                              to={`/products/${rewriteUrl(product.name)}-${
+                                product.id
+                              }`}
+                            >
                               <h6>{product.name}</h6>
                               <p className="form-text my-1">
                                 <span>
