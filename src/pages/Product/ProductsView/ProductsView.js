@@ -95,7 +95,7 @@ function ProductsView() {
       <div className="box-sorting mb-3">
         <section className="d-flex flex-wrap column-gap-3 row-gap-1 justify-content-center justify-content-md-between">
           <div className="left-panel-sorting align-self-center">
-            <h5 className="">
+            <h5 className="mb-0">
               {productsResponse == null || productsResponse?.totalElements == 0
                 ? "Không có sản phẩm nào được tìm thấy"
                 : `${productsResponse?.totalElements} Sản phẩm được tìm thấy`}

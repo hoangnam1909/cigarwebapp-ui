@@ -12,5 +12,6 @@ export default {
   adminEditProduct: "/admin/products/edit",
 
   adminOrders: "/admin/orders",
+  adminAddOrder: "/admin/orders/add",
   adminEditOrder: "/admin/orders/edit",
 };

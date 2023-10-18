@@ -17,6 +17,7 @@ import { rewriteUrl } from "~/utils/UrlRewrite";
 import ScrollTop from "~/components/ScrollTop/ScrollTop";
 import { toast } from "react-toastify";
 import paymentDestinationAPI from "~/apis/paymentAPI/paymentDestinationAPI";
+import LocationSelect from "~/components/Input/LocationSelect";
 
 function Cart() {
   document.title = "Giỏ hàng";
@@ -32,6 +33,8 @@ function Cart() {
   const [province, setProvince] = useState();
   const [district, setDistrict] = useState();
   const [ward, setWard] = useState();
+
+  const [provinceAddress, setProvinceAddress] = useState("");
 
   const [cart, setCart] = useState();
 
@@ -122,19 +125,16 @@ function Cart() {
     e.preventDefault();
 
     let requestBody = { ...orderRequest };
-    let address = "";
-
-    if (requestBody.deliveryAddress.trim().length > 0)
-      address += requestBody.deliveryAddress;
-    if (ward) address += `, ${ward.name}`;
-    if (district) address += `, ${district.name}`;
-    if (province) address += `, ${province.name}`;
+    let deliveryAddressDetail = `${
+      requestBody.deliveryAddress ? requestBody.deliveryAddress + ", " : ""
+    } 
+    ${provinceAddress}`;
 
     requestBody = {
       ...requestBody,
       fullName: nameNormalization(requestBody.fullName),
       email: requestBody.email.trim(),
-      deliveryAddress: nameNormalization(address),
+      deliveryAddress: nameNormalization(deliveryAddressDetail),
       orderItems: getOrderItems(),
     };
 
@@ -182,7 +182,7 @@ function Cart() {
           <div className="cart-wrapper mb-3">
             <div className="row g-2 mb-3">
               <div className="col-sm-12 col-xl-7">
-                <div className="card px-4 py-3 h-100">
+                <div className="card p-3 h-100">
                   <h5 className="mb-3">THÔNG TIN MUA HÀNG</h5>
                   <form onSubmit={handleSubmitForm}>
                     <div className="row g-2">
@@ -240,7 +240,7 @@ function Cart() {
                       <label>Email</label>
                     </div>
 
-                    <div className="row g-2 mb-3">
+                    {/* <div className="row g-2 mb-3">
                       <div className="col-md mt-md-2">
                         <select
                           className="form-select"
@@ -318,7 +318,9 @@ function Cart() {
                           })}
                         </select>
                       </div>
-                    </div>
+                    </div> */}
+
+                    <LocationSelect setLocation={setProvinceAddress} />
 
                     <div className="form-floating mb-3">
                       <input
@@ -373,7 +375,7 @@ function Cart() {
                       <label>Hình thức thanh toán</label>
                     </div>
 
-                    <div className="text-center my-4">
+                    <div className="text-center mb-0">
                       <button
                         className="btn btn-secondary w-75 py-2"
                         type="submit"
@@ -395,7 +397,7 @@ function Cart() {
               </div>
 
               <div className="col-sm-12 col-xl-5">
-                <div className="card px-4 py-3 h-100">
+                <div className="card p-3 h-100">
                   <h5 className="mb-3">Giỏ hàng ({cart.products?.length})</h5>
                   {cart.products
                     ?.sort((c1, c2) => {

@@ -25,6 +25,18 @@ function AdminUpsertOrder() {
     if (res.status === 200) setOrder(res.data.result);
   };
 
+  const recreatePaymentUrl = async () => {
+    try {
+      const res = await paymentAPI.adminRecreatePaymentUrl(orderId);
+      if (res.status === 200) {
+        toast.success("Đã tạo mới thông tin thanh toán");
+        setReloadFlag(!reloadFlag);
+      }
+    } catch (error) {
+      toast.error(error.response.data.result);
+    }
+  };
+
   const updatePayment = async () => {
     try {
       const res = await paymentAPI.adminUpdatePaymentStatus(orderId);
@@ -49,7 +61,7 @@ function AdminUpsertOrder() {
 
           <div className="row row-cols-1 row-cols-xxl-2 g-3">
             <div className="col-12 col-xxl-8">
-              <div className="card shadow p-4">
+              <div className="card shadow p-3">
                 <div className="mb-4 d-flex justify-content-between border-bottom pb-3 gap-2">
                   <h5 className="mb-1">
                     {moment(order.createdAt).format("LTS")}
@@ -130,18 +142,38 @@ function AdminUpsertOrder() {
                         </>
                       ) : (
                         <>
-                          <p className="text-danger mb-0">Chưa thanh toán</p>
+                          <a
+                            href={order.payment.paymentUrl}
+                            target="_blank"
+                            rel="noopener"
+                            className="text-danger mb-0"
+                          >
+                            Chưa thanh toán
+                          </a>
                           {order.payment?.paymentDestination?.id != "cod" ? (
-                            <a
-                              className="btn btn-outline-danger w-100 px-3 mt-1"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                updatePayment();
-                              }}
-                            >
-                              <i className="fa-solid fa-rotate-right me-2"></i>
-                              Cập nhật kết quả
-                            </a>
+                            <>
+                              <a
+                                className="btn btn-outline-success w-100 px-3 mt-1"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  recreatePaymentUrl();
+                                }}
+                              >
+                                <i className="fa-solid fa-rotate me-2"></i>
+                                Tạo mới t.tin thanh toán
+                              </a>
+
+                              <a
+                                className="btn btn-outline-danger w-100 px-3 mt-1"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  updatePayment();
+                                }}
+                              >
+                                <i className="fa-solid fa-rotate-right me-2"></i>
+                                Cập nhật kết quả
+                              </a>
+                            </>
                           ) : null}
                         </>
                       )}
@@ -182,8 +214,7 @@ function AdminUpsertOrder() {
                                     }
                                     width="70"
                                     height="70"
-                                    style={{ objectFit: "cover" }}
-                                    className="rounded"
+                                    className="object-fit-cover rounded border"
                                   />
                                 </Link>
                               </td>
@@ -231,16 +262,14 @@ function AdminUpsertOrder() {
             <div className="col-12 col-xxl-4">
               <div className="row g-3">
                 <div className="col-12 col-md-6 col-xxl-12">
-                  <div className="card shadow p-4">
+                  <div className="card shadow p-3">
                     <h5 className="mb-3 text-gray-800">Tình trạng đơn hàng</h5>
-
                     <OrderStatusForm order={order} getOrder={getOrder} />
                   </div>
                 </div>
                 <div className="col-12 col-md-6 col-xxl-12">
-                  <div className="card shadow p-4">
+                  <div className="card shadow p-3">
                     <h5 className="mb-3 text-gray-800">Đối tác giao hàng</h5>
-
                     <DeliveryPartner order={order} getOrder={getOrder} />
                   </div>
                 </div>

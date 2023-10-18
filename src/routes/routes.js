@@ -15,6 +15,7 @@ import AdminUpsertProduct from "~/pages/Admin/AdminProducts/AdminUpsertProduct";
 import AdminUpsertBrand from "~/pages/Admin/AdminBrand/AdminUpsertBrand";
 import AdminUpsertCategory from "~/pages/Admin/AdminCategories/AdminUpsertCategory";
 import AdminUpsertOrder from "~/pages/Admin/AdminOrders/AdminUpsertOrder";
+import AdminAddOrder from "~/pages/Admin/AdminOrders/AdminAddOrder";
 
 export const headerRoutes = [
   // { name: "Trang chủ", path: "/" },
@@ -49,6 +50,7 @@ export const privateRoutes = [
   },
 
   { path: "/admin/orders", component: AdminOrders },
+  { path: "/admin/orders/add", component: AdminAddOrder },
   { path: "/admin/orders/edit/:orderId", component: AdminUpsertOrder },
 
   { path: "/admin/products", component: AdminProducts },

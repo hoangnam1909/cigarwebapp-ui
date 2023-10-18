@@ -52,29 +52,22 @@ function AdminBrand() {
 
             <ReloadData reloadFlag={reloadFlag} setReloadFlag={setReloadFlag} />
 
-            <div className="">
-              <div className="btn-group">
-                <div className="btn-group" role="group">
-                  <Link
-                    className="btn btn-primary"
-                    style={{ width: "180px" }}
-                    to={adminRoutes.adminAddBrand}
-                  >
-                    <i className="fa-solid fa-plus me-2"></i>
-                    Thêm thương hiệu
-                  </Link>
-                </div>
-              </div>
-            </div>
+            <Link
+              className="btn btn-primary px-3"
+              to={adminRoutes.adminAddBrand}
+            >
+              <i className="fa-solid fa-plus me-2"></i>
+              Thêm thương hiệu
+            </Link>
           </div>
         </div>
 
-        <div className="card shadow mb-4">
-          <div className="d-flex justify-content-end mt-3 px-4">
+        <div className="card shadow mb-4 p-3">
+          <div className="d-flex justify-content-end">
             <ArrowPagination pageData={brandsResponse} />
           </div>
 
-          <div className="px-4 py-0">
+          <div className="">
             <table
               className="table table-hover"
               id="dataTable"

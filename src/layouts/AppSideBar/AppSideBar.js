@@ -21,7 +21,7 @@ function AppSideBar() {
 
   return (
     <div
-      className="d-flex flex-column flex-shrink-0 p-3 shadow bg-white vh-100"
+      className="d-flex flex-column flex-shrink-0 p-3 shadow bg-white h-100"
       style={{ width: "260px" }}
     >
       <div className="sidebar-header">

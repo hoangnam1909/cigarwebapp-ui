@@ -28,4 +28,5 @@ export let privateEndpoints = {
   deliveryCompanies: "/admin/delivery-companies",
   payments: "/admin/payments",
   updatePaymentStatus: "/admin/payments/update-payment-status",
+  recreatePaymentUrl: "/admin/payments/recreate-payment-url",
 };

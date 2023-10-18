@@ -19,6 +19,10 @@ const orderAPI = {
   },
 
   // Private API
+  adminAddOrder: (requestBody) => {
+    const url = `${privateEndpoints.orders}`;
+    return axiosAuth.post(url, requestBody);
+  },
   getAdminOrders: (params, page, size) => {
     const url = `${privateEndpoints.orders}`;
     return axiosAuth.get(url, {

@@ -12,21 +12,20 @@ function PaymentReturnPage() {
   useEffect(() => {
     const params = queryString.parse(location.search);
     const updatePaymentStatus = async () => {
-      const res = await paymentAPI.updatePaymentStatus(
-        params["requestId"],
-        params["orderId"]
-      );
+      try {
+        const res = await paymentAPI.updatePaymentStatus(params);
 
-      if (res.status === 200) {
-        if (res.data.result == true) {
-          setPaymentStatus(true);
-          setTimeout(() => {
-            navigate("/");
-          }, 5000);
-        } else {
-          setPaymentStatus(false);
+        if (res.status === 200) {
+          if (res.data.result == true) {
+            setPaymentStatus(true);
+            setTimeout(() => {
+              navigate("/");
+            }, 5000);
+          } else {
+            setPaymentStatus(false);
+          }
         }
-      }
+      } catch (error) {}
     };
 
     updatePaymentStatus();

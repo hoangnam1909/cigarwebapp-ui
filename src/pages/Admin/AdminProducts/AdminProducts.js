@@ -142,24 +142,22 @@ function AdminProducts() {
 
             <ReloadData reloadFlag={reloadFlag} setReloadFlag={setReloadFlag} />
 
-            <div className="btn-group" role="group">
-              <Link
-                className="btn btn-primary px-3"
-                style={{ width: "180px" }}
-                to={adminRoutes.adminAddProduct}
-              >
-                <i className="fa-solid fa-plus me-2"></i>
-                Thêm sản phẩm
-              </Link>
-            </div>
+            <Link
+              className="btn btn-primary px-3"
+              to={adminRoutes.adminAddProduct}
+            >
+              <i className="fa-solid fa-plus me-2"></i>
+              Thêm sản phẩm
+            </Link>
           </div>
         </div>
 
-        <div className="card shadow mb-4">
-          <div className="d-flex justify-content-end mt-3 px-4">
+        <div className="card shadow mb-4 p-3">
+          <div className="d-flex justify-content-end">
             <ArrowPagination pageData={productsResponse} />
           </div>
-          <div className="px-4 py-0">
+
+          <div className="table-responsive">
             <table
               className="table table-hover"
               id="dataTable"
@@ -172,17 +170,17 @@ function AdminProducts() {
                     className="align-self-center"
                     style={{ width: "5%" }}
                   ></th>
-                  <th className="align-self-center" style={{ width: "5%" }}>
+                  <th className="align-self-center" style={{ width: "7%" }}>
                     Kích hoạt
                   </th>
-                  <th className="align-self-center" style={{ width: "5%" }}>
+                  <th className="align-self-center" style={{ width: "6%" }}>
                     ID
                   </th>
                   <th className="align-self-center" style={{ width: "" }}>
                     Tên sản phẩm
                   </th>
-                  <th className="align-self-center" style={{ width: "8%" }}>
-                    Số lượng còn
+                  <th className="align-self-center" style={{ width: "7%" }}>
+                    SL
                   </th>
                   <th className="align-self-center" style={{ width: "14%" }}>
                     Danh mục
@@ -190,7 +188,7 @@ function AdminProducts() {
                   <th className="align-self-center" style={{ width: "14%" }}>
                     Thương hiệu
                   </th>
-                  <th className="align-self-center" style={{ width: "15%" }}>
+                  <th className="align-self-center" style={{ width: "13%" }}>
                     Ngày tạo
                   </th>
                   <th
@@ -213,9 +211,9 @@ function AdminProducts() {
                               >
                                 <img
                                   src={p.productImages[0]?.linkToImage}
-                                  width={53}
-                                  height={53}
-                                  className="object-fit-cover rounded"
+                                  width="70"
+                                  height="70"
+                                  className="object-fit-cover rounded border"
                                 />
                               </Link>
                             </td>
@@ -273,7 +271,7 @@ function AdminProducts() {
                                     </li>
                                     <li>
                                       <a
-                                        className="dropdown-item text-danger"
+                                        className="dropdown-item text-danger cursor-pointer"
                                         onClick={(e) => {
                                           e.preventDefault();
                                           handleDelete(p.id);

@@ -20,6 +20,7 @@ import FilterDropdown from "~/components/Filter/FilterDropdown";
 import ArrowPagination from "~/components/Pagination/ArrowPagination";
 import ReloadData from "~/components/Filter/ReloadData";
 import Alert from "~/components/Alert/Alert";
+import paymentDestinationAPI from "~/apis/paymentAPI/paymentDestinationAPI";
 
 function AdminOrders() {
   document.title = "Quản lý đơn đặt hàng";
@@ -34,6 +35,7 @@ function AdminOrders() {
   const [ordersResponse, setOrdersResponse] = useState();
   const [orderStatuses, setOrderStatuses] = useState();
   const [deliveryCompanies, setDeliveryCompanies] = useState();
+  const [paymentDestinations, setPaymentDestinations] = useState();
 
   const PAGE_SIZE = 12;
 
@@ -47,9 +49,15 @@ function AdminOrders() {
     if (res.status === 200) setDeliveryCompanies(res.data.result);
   };
 
+  const getPaymentDestination = async () => {
+    const res = await paymentDestinationAPI.getPaymentDestinations();
+    if (res.status === 200) setPaymentDestinations(res.data.result);
+  };
+
   useEffect(() => {
     getOrderStatuses();
     getDeliveryCompanies();
+    getPaymentDestination();
   }, []);
 
   useEffect(() => {
@@ -105,33 +113,34 @@ function AdminOrders() {
               valueKey={"id"}
             />
 
+            <FilterDropdown
+              filterList={paymentDestinations}
+              filterName={"Hình thức thanh toán"}
+              filterKey={"paymentDestination"}
+              displayKey={"name"}
+              valueKey={"id"}
+            />
+
             <RemoveFilter />
 
             <ReloadData reloadFlag={reloadFlag} setReloadFlag={setReloadFlag} />
 
-            {/* <div className="">
-              <div className="btn-group">
-                <div className="btn-group" role="group">
-                  <Link
-                    className="btn btn-primary"
-                    style={{ width: "180px" }}
-                    to={adminRoutes.adminad}
-                  >
-                    <i className="fa-solid fa-plus me-2"></i>
-                    Action...
-                  </Link>
-                </div>
-              </div>
-            </div> */}
+            <Link
+              className="btn btn-primary px-3"
+              to={adminRoutes.adminAddOrder}
+            >
+              <i className="fa-solid fa-plus me-2"></i>
+              Tạo đơn hàng
+            </Link>
           </div>
         </div>
 
-        <div className="card shadow mb-4">
-          <div className="d-flex justify-content-end mt-3 px-4">
+        <div className="card shadow mb-4 p-3">
+          <div className="d-flex justify-content-end">
             <ArrowPagination pageData={ordersResponse} />
           </div>
 
-          <div className="px-4 py-0 overflow-auto">
+          <div className="overflow-auto">
             <table className="table table-hover" width="100%" cellSpacing="0">
               <thead>
                 <tr>
