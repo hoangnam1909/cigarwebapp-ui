@@ -14,7 +14,7 @@ function AdminBrand() {
   document.title = "Quản lý thương hiệu";
 
   let location = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const [reloadFlag, setReloadFlag] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -87,8 +87,8 @@ function AdminBrand() {
                   <tbody>
                     {brandsResponse?.numberOfElements != 0 ? (
                       <>
-                        {brandsResponse?.content?.map((brand, index) => (
-                          <tr key={index}>
+                        {brandsResponse?.content?.map((brand) => (
+                          <tr key={brand.id}>
                             <td className="align-middle fw-bolder">
                               #{brand.id}
                             </td>

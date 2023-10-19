@@ -79,9 +79,12 @@ function LocationSelect({ setLocation }) {
           }}
         >
           <option value="0">Chọn Tỉnh Thành</option>
-          {provinces?.map((province, index) => {
+          {provinces?.map((province) => {
             return (
-              <option key={index} value={`${province.code}|${province.name}`}>
+              <option
+                key={province.code}
+                value={`${province.code}|${province.name}`}
+              >
                 {province.name}
               </option>
             );
@@ -107,9 +110,12 @@ function LocationSelect({ setLocation }) {
           }}
         >
           <option value="0">Chọn Quận Huyện</option>
-          {districts?.map((district, index) => {
+          {districts?.map((district) => {
             return (
-              <option key={index} value={`${district.code}|${district.name}`}>
+              <option
+                key={district.code}
+                value={`${district.code}|${district.name}`}
+              >
                 {district.name}
               </option>
             );
@@ -134,9 +140,9 @@ function LocationSelect({ setLocation }) {
           }}
         >
           <option value="0">Chọn Phường Xã</option>
-          {wards?.map((ward, index) => {
+          {wards?.map((ward) => {
             return (
-              <option key={index} value={`${ward.code}|${ward.name}`}>
+              <option key={ward.code} value={`${ward.code}|${ward.name}`}>
                 {ward.name}
               </option>
             );

@@ -3,7 +3,7 @@ import ModalContent from "./ModalContent";
 
 function Modal({ showModal, setShowModal, id, type, content }) {
   useEffect(() => {
-    if (showModal == true) {
+    if (showModal) {
       document.getElementById(`modal-show-button-${id}`).click();
     }
   }, [showModal]);

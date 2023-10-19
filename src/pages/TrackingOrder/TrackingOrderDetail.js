@@ -117,7 +117,7 @@ function TrackingOrderDetail({ order, setOrder }) {
               </div>
             </div>
 
-            {order.payment.isPaid == false ? (
+            {!order.payment.isPaid ? (
               <div className="pt-2">
                 <a
                   className="btn btn-outline-danger w-100 px-3 py-2"

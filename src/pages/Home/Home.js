@@ -45,9 +45,9 @@ function Home() {
       </div>
 
       <div className="row g-2 mb-3 pb-4 border-bottom">
-        {specs.map((spec, index) => {
+        {specs.map((spec) => {
           return (
-            <div key={index} className="col-12 col-md-4">
+            <div key={spec.id} className="col-12 col-md-4">
               <div className="h-100 p-4 bg-secondary-subtle text-center rounded">
                 <h2 className="display-6 text-uppercase">{spec.name}</h2>
                 <p className="lead">{spec.description}</p>

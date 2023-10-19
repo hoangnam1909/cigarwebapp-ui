@@ -91,8 +91,7 @@ function ProductDetail() {
                               width="80"
                               height="80"
                               alt={`thumbnail-${image.id}`}
-                              className="thumbnail-image rounded object-fit-cover"
-                              style={{ cursor: "pointer" }}
+                              className="thumbnail-image border rounded object-fit-cover cursor-pointer"
                             />
                           </div>
                         );

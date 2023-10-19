@@ -27,9 +27,9 @@ function OrderStatusesSelect({ data, setData }) {
           });
         }}
       >
-        {orderStatuses?.map((orderStatus, index) => {
+        {orderStatuses?.map((orderStatus) => {
           return (
-            <option key={index} value={orderStatus.id}>
+            <option key={orderStatus.id} value={orderStatus.id}>
               {orderStatus.name}
             </option>
           );

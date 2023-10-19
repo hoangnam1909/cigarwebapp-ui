@@ -27,9 +27,9 @@ function DeliveryConmpaniesSelect({ data, setData }) {
           });
         }}
       >
-        {deliveryCompanies?.map((deliveryCompany, index) => {
+        {deliveryCompanies?.map((deliveryCompany) => {
           return (
-            <option key={index} value={deliveryCompany.id}>
+            <option key={deliveryCompany.id} value={deliveryCompany.id}>
               {deliveryCompany.name}
             </option>
           );

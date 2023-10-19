@@ -62,13 +62,13 @@ function AdminUpsertOrder() {
           <div className="row row-cols-1 row-cols-xxl-2 g-3">
             <div className="col-12 col-xxl-8">
               <div className="card shadow p-3">
-                <div className="mb-4 d-flex justify-content-between border-bottom pb-3 gap-2">
-                  <h5 className="mb-1">
+                <div className="d-flex justify-content-between border-bottom mb-4 pb-2 gap-2">
+                  <h5 className="mb-0">
                     {moment(order.createdAt).format("LTS")}
                     {" - "}
                     {moment(order.createdAt).format("LL")}
                   </h5>
-                  <h6 className="mb-1">
+                  <h6 className="mb-0">
                     Tình trạng:{" "}
                     <span className="text-primary">
                       {order.orderStatus?.name}
@@ -160,7 +160,7 @@ function AdminUpsertOrder() {
                                 }}
                               >
                                 <i className="fa-solid fa-rotate me-2"></i>
-                                Tạo mới t.tin thanh toán
+                                Tạo mới thanh toán
                               </a>
 
                               <a
@@ -182,7 +182,7 @@ function AdminUpsertOrder() {
                 </div>
 
                 <div className="table-responsive">
-                  <table className="table table-border">
+                  <table className="table table-border mb-0">
                     <thead>
                       <tr className="border-top">
                         <td className="fw-semibold" colSpan={2}>
@@ -198,9 +198,9 @@ function AdminUpsertOrder() {
                         .sort((item1, item2) => {
                           return item1.id - item2.id;
                         })
-                        .map((orderItem, index) => {
+                        .map((orderItem) => {
                           return (
-                            <tr key={index}>
+                            <tr key={orderItem.id}>
                               <td style={{ width: "70px" }}>
                                 <Link
                                   to={`/products/${orderItem.product.id}`}

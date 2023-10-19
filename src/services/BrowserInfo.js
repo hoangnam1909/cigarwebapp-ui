@@ -1,8 +1,8 @@
-var nAgt = navigator.userAgent;
-var browserName = navigator.appName;
-var fullVersion = "" + parseFloat(navigator.appVersion);
-var majorVersion = parseInt(navigator.appVersion, 10);
-var nameOffset, verOffset, ix;
+let nAgt = navigator.userAgent;
+let browserName = navigator.appName;
+let fullVersion = "" + parseFloat(navigator.appVersion);
+let majorVersion = parseInt(navigator.appVersion, 10);
+let nameOffset, verOffset, ix;
 
 // In Opera, the true version is after "OPR" or after "Version"
 if ((verOffset = nAgt.indexOf("OPR")) != -1) {
@@ -67,7 +67,7 @@ if (isNaN(majorVersion)) {
   majorVersion = parseInt(navigator.appVersion, 10);
 }
 
-var OSName = navigator.userAgentData.platform;
+let OSName = navigator.userAgentData.platform;
 
 export const getBrowerInfo = () => {
   return `${OSName} ${browserName} ${majorVersion}`;

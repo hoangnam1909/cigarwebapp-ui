@@ -21,7 +21,7 @@ function AdminProducts() {
   document.title = "Quản lý sản phẩm";
 
   let location = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const [reloadFlag, setReloadFlag] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -54,7 +54,7 @@ function AdminProducts() {
 
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm("Bạn chắc chắn xoá sản phẩm này?");
-    if (confirmDelete == true) {
+    if (confirmDelete) {
       const res = await productAPI.deleteProduct(id);
       if (res.status === 200) {
         setReloadFlag(!reloadFlag);
@@ -204,7 +204,7 @@ function AdminProducts() {
                     {productsResponse?.numberOfElements != 0 ? (
                       <>
                         {productsResponse?.content?.map((p, index) => (
-                          <tr key={index}>
+                          <tr key={p.id}>
                             <td className="align-middle">
                               <Link
                                 to={`${adminRoutes.adminEditProduct}/${p.id}`}

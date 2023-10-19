@@ -9,7 +9,7 @@ function FilterDropdown({
   valueKey,
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [currentValue, setCurrentValue] = useState(filterName);
+  const [currentValue, setCurrentValue] = useState(filterName || "");
 
   useEffect(() => {
     if (searchParams.get(filterKey) == null) setCurrentValue(filterName);

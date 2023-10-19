@@ -1,4 +1,4 @@
-export default function ModalContent({ type, content }) {
+function ModalContent({ type, content }) {
   if (type == "product") {
     return (
       <>
@@ -30,3 +30,5 @@ export default function ModalContent({ type, content }) {
     </>
   );
 }
+
+export default ModalContent;

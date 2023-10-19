@@ -23,21 +23,19 @@ function AdminAddOrder() {
   document.title = "Tạo đơn hàng";
 
   let location = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [productsReloadFlag, setProductsReloadFlag] = useState(false);
 
-  const [cart, setCart] = useState([]);
+  const PAGE_SIZE = 10;
   const [productsResponse, setProductsResponse] = useState();
   const [categories, setCategories] = useState();
   const [brands, setBrands] = useState();
-
   const [paymentDestinations, setPaymentDestinations] = useState();
+
   const [provinceAddress, setProvinceAddress] = useState("");
 
-  const PAGE_SIZE = 10;
-
+  const [cart, setCart] = useState([]);
   const [orderRequest, setOrderRequest] = useState({
     fullName: "",
     email: "",
@@ -49,6 +47,21 @@ function AdminAddOrder() {
     deliveryCompanyId: 1,
   });
 
+  const initialValue = () => {
+    setOrderRequest({
+      fullName: "",
+      email: "",
+      phone: "",
+      deliveryAddress: "",
+      note: "",
+      paymentDestinationId: "cod",
+      orderStatusId: 2,
+      deliveryCompanyId: 1,
+    });
+    setCart([]);
+    setProvinceAddress("");
+  };
+
   const addToCart = (product) => {
     let existedIndex = -1;
     existedIndex = cart.findIndex((p) => p.id === product.id);
@@ -58,9 +71,6 @@ function AdminAddOrder() {
       productAddingg.quantity = 1;
       let cartUpdating = [...cart, productAddingg];
       setCart(cartUpdating);
-      // toast.success("Sản phẩm đã được thêm vào giỏ hàng", {
-      //   position: "bottom-center",
-      // });
     } else {
       toast.info("Sản phẩm đã có trong giỏ hàng", {
         position: "bottom-center",
@@ -117,7 +127,7 @@ function AdminAddOrder() {
     };
 
     getProducts();
-  }, [searchParams, productsReloadFlag]);
+  }, [searchParams]);
 
   // get filter fields data
   const getPaymentDestinations = async () => {
@@ -166,6 +176,7 @@ function AdminAddOrder() {
     try {
       const res = await orderAPI.adminAddOrder(requestBody);
       if (res.status === 200) {
+        initialValue();
         toast.success("Tạo đơn hàng thành công!", {
           position: "bottom-center",
         });
@@ -313,9 +324,9 @@ function AdminAddOrder() {
                             });
                           }}
                         >
-                          {paymentDestinations?.map((des, index) => {
+                          {paymentDestinations?.map((des) => {
                             return (
-                              <option key={index} value={des.id}>
+                              <option key={des.id} value={des.id}>
                                 {des.name}
                               </option>
                             );
@@ -372,10 +383,10 @@ function AdminAddOrder() {
                       </>
                     ) : (
                       <>
-                        {cart.map((product, index) => {
+                        {cart.map((product) => {
                           return (
                             <div
-                              key={index}
+                              key={product.id}
                               className={`d-flex gap-3 pt-3 ${
                                 product.unitsInStock == 0 ? "opacity-50" : ""
                               }`}
@@ -481,7 +492,7 @@ function AdminAddOrder() {
           </div>
 
           <div className="col-6">
-            <div className="card">
+            <div className="card h-100">
               <div
                 className="card-body"
                 style={{ height: "860px", overflow: "auto" }}

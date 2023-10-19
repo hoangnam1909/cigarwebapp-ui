@@ -3,7 +3,7 @@ import { useLocation, useSearchParams } from "react-router-dom";
 
 const ScrollTop = () => {
   const { pathname } = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   let location = useLocation();
 
   useLayoutEffect(() => {

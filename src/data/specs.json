@@ -1,13 +1,16 @@
 [
   {
+    "id": 1,
     "name": "CHẤT LƯỢNG",
     "description": "Cam kết những sản phẩm đến tay khách hàng đều là các sản phẩm tốt nhất."
   },
   {
+    "id": 2,
     "name": "GIÁ CẢ",
     "description": "Chính sách giá hàng đầu, ưu tiên quyền lợi khách hàng."
   },
   {
+    "id": 3,
     "name": "GIAO HÀNG",
     "description": "Nhận giao hàng toàn quốc nhanh chóng đảm bảo khi tới tay khách hàng."
   }

@@ -15,18 +15,17 @@ function AdminCategories() {
   document.title = "Quản lý danh mục";
 
   let location = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const [reloadFlag, setReloadFlag] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const [categoriesResponse, setCategoriesResponse] = useState();
-  const [keyword, setKeyword] = useState();
   const PAGE_SIZE = 12;
 
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm("Bạn chắc chắn xoá danh mục này?");
-    if (confirmDelete == true) {
+    if (confirmDelete) {
       const res = await categoryAPI.deleteCategory(id);
       if (res.status === 200) {
         setReloadFlag(!reloadFlag);
@@ -101,8 +100,8 @@ function AdminCategories() {
                   <tbody>
                     {categoriesResponse?.numberOfElements != 0 ? (
                       <>
-                        {categoriesResponse?.content?.map((category, index) => (
-                          <tr key={index}>
+                        {categoriesResponse?.content?.map((category) => (
+                          <tr key={category.id}>
                             <td className="align-middle fw-bolder">
                               #{category.id}
                             </td>

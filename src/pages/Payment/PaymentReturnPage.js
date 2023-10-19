@@ -16,7 +16,7 @@ function PaymentReturnPage() {
         const res = await paymentAPI.updatePaymentStatus(params);
 
         if (res.status === 200) {
-          if (res.data.result == true) {
+          if (res.data.result) {
             setPaymentStatus(true);
             setTimeout(() => {
               navigate("/");
@@ -44,7 +44,7 @@ function PaymentReturnPage() {
         </div>
       </div>
     );
-  } else if (paymentStatus == false) {
+  } else if (!paymentStatus) {
     return (
       <div className="card text-center">
         <div className="card-body py-5">
@@ -54,7 +54,7 @@ function PaymentReturnPage() {
         </div>
       </div>
     );
-  } else if (paymentStatus == true) {
+  } else if (paymentStatus) {
     return (
       <div className="card text-center py-5">
         <div className="card-body">

@@ -40,7 +40,7 @@ function OrderSuccessful({ order }) {
         <p className="text-center mb-0">
           Tình trạng thanh toán:{" "}
           <b>
-            {order.payment.isPaid == true ? (
+            {order.payment.isPaid ? (
               <span className="text-success">Đã thanh toán</span>
             ) : (
               <>

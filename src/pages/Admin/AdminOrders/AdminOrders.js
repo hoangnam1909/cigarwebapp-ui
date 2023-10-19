@@ -27,7 +27,7 @@ function AdminOrders() {
 
   let location = useLocation();
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const [isLoading, setIsLoading] = useState(false);
   const [reloadFlag, setReloadFlag] = useState(false);
@@ -157,7 +157,7 @@ function AdminOrders() {
                   <th style={{ width: "10%" }}>Trạng thái</th>
                   <th style={{ width: "15%" }}>Đối tác giao hàng</th>
                   <th style={{ width: "15%" }}>Thanh toán</th>
-                  <th style={{ width: "5%" }}></th>
+                  {/* <th style={{ width: "5%" }}></th> */}
                 </tr>
               </thead>
 
@@ -199,7 +199,7 @@ function AdminOrders() {
                             <td className="align-middle">
                               {order.payment?.paymentDestination?.name}
                             </td>
-                            <td className="align-middle">
+                            {/* <td className="align-middle">
                               <div className="d-flex flex-row justify-content-center">
                                 <div className="btn-group">
                                   <a
@@ -222,7 +222,7 @@ function AdminOrders() {
                                   </ul>
                                 </div>
                               </div>
-                            </td>
+                            </td> */}
                           </tr>
                         ))}
                       </>

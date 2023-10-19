@@ -18,7 +18,7 @@ function ProductsView() {
   document.title = "Các sản phẩm";
 
   let location = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const [isLoading, setIsLoading] = useState(false);
 

@@ -26,7 +26,7 @@ function AppSideBar() {
     >
       <div className="sidebar-header">
         <Link to={"/"} className="mb-3">
-          <h3 className="">
+          <h3 className="px-3">
             <span>
               <i className="fa-solid fa-shield-halved me-2"></i>
             </span>

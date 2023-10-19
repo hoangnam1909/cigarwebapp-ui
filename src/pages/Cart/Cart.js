@@ -10,11 +10,9 @@ import {
 } from "~/services/CartService";
 import OrderSuccessful from "./OrderSuccessful";
 import cartAPI from "~/apis/cartAPI/cartAPI";
-import axios from "axios";
 import orderAPI from "~/apis/orderAPI/orderAPI";
 import { Link } from "react-router-dom";
 import { rewriteUrl } from "~/utils/UrlRewrite";
-import ScrollTop from "~/components/ScrollTop/ScrollTop";
 import { toast } from "react-toastify";
 import paymentDestinationAPI from "~/apis/paymentAPI/paymentDestinationAPI";
 import LocationSelect from "~/components/Input/LocationSelect";
@@ -25,14 +23,6 @@ function Cart() {
   const [order, setOrder] = useState();
 
   const [paymentDestinations, setPaymentDestinations] = useState();
-
-  const [provinces, setProvinces] = useState();
-  const [districts, setDistricts] = useState();
-  const [wards, setWards] = useState();
-
-  const [province, setProvince] = useState();
-  const [district, setDistrict] = useState();
-  const [ward, setWard] = useState();
 
   const [provinceAddress, setProvinceAddress] = useState("");
 
@@ -72,11 +62,6 @@ function Cart() {
     }
   };
 
-  const getProvinces = async () => {
-    const res = await axios.get("https://provinces.open-api.vn/api/p/");
-    if (res.status === 200) setProvinces(res.data);
-  };
-
   const getPaymentDestinations = async () => {
     const res = await paymentDestinationAPI.getPaymentDestinations();
     if (res.status === 200) {
@@ -85,41 +70,9 @@ function Cart() {
   };
 
   useEffect(() => {
-    getProvinces();
     getPaymentDestinations();
     getProductsInCart();
   }, [reloadFlag]);
-
-  useEffect(() => {
-    if (province) {
-      const getDistricts = async () => {
-        const res = await axios.get(
-          `https://provinces.open-api.vn/api/p/${province.code}?depth=2`
-        );
-        if (res.status === 200) setDistricts(res.data.districts);
-      };
-
-      getDistricts();
-    }
-
-    setDistricts();
-    setWards();
-  }, [province]);
-
-  useEffect(() => {
-    if (district) {
-      const getWards = async () => {
-        const res = await axios.get(
-          `https://provinces.open-api.vn/api/d/${district.code}?depth=2`
-        );
-        if (res.status === 200) setWards(res.data.wards);
-      };
-
-      getWards();
-    }
-
-    setWards();
-  }, [district]);
 
   const handleSubmitForm = (e) => {
     e.preventDefault();
@@ -166,12 +119,10 @@ function Cart() {
   };
 
   if (order != null) {
-    <ScrollTop />;
     return <OrderSuccessful order={order} />;
   }
 
   if (cart?.products?.length == 0) {
-    <ScrollTop />;
     return <EmptyCart />;
   }
 
@@ -240,86 +191,6 @@ function Cart() {
                       <label>Email</label>
                     </div>
 
-                    {/* <div className="row g-2 mb-3">
-                      <div className="col-md mt-md-2">
-                        <select
-                          className="form-select"
-                          defaultValue={"0"}
-                          onChange={(e) => {
-                            let value = e.target.value;
-                            setProvince({
-                              code: value.split("|")[0],
-                              name: value.split("|")[1],
-                            });
-                          }}
-                        >
-                          <option value="0">Chọn Tỉnh Thành</option>
-                          {provinces?.map((province, index) => {
-                            return (
-                              <option
-                                key={index}
-                                value={`${province.code}|${province.name}`}
-                              >
-                                {province.name}
-                              </option>
-                            );
-                          })}
-                        </select>
-                      </div>
-
-                      <div className="col-md mt-3 mt-md-2">
-                        <select
-                          className="form-select"
-                          defaultValue={"0"}
-                          onChange={(e) => {
-                            let value = e.target.value;
-                            setDistrict({
-                              code: value.split("|")[0],
-                              name: value.split("|")[1],
-                            });
-                          }}
-                        >
-                          <option value="0">Chọn Quận Huyện</option>
-                          {districts?.map((district, index) => {
-                            return (
-                              <option
-                                key={index}
-                                value={`${district.code}|${district.name}`}
-                              >
-                                {district.name}
-                              </option>
-                            );
-                          })}
-                        </select>
-                      </div>
-
-                      <div className="col-md mt-3 mt-md-2">
-                        <select
-                          className="form-select"
-                          defaultValue={"0"}
-                          onChange={(e) => {
-                            let value = e.target.value;
-                            setWard({
-                              code: value.split("|")[0],
-                              name: value.split("|")[1],
-                            });
-                          }}
-                        >
-                          <option value="0">Chọn Phường Xã</option>
-                          {wards?.map((ward, index) => {
-                            return (
-                              <option
-                                key={index}
-                                value={`${ward.code}|${ward.name}`}
-                              >
-                                {ward.name}
-                              </option>
-                            );
-                          })}
-                        </select>
-                      </div>
-                    </div> */}
-
                     <LocationSelect setLocation={setProvinceAddress} />
 
                     <div className="form-floating mb-3">
@@ -364,10 +235,10 @@ function Cart() {
                           });
                         }}
                       >
-                        {paymentDestinations?.map((des, index) => {
+                        {paymentDestinations?.map((destination) => {
                           return (
-                            <option key={index} value={des.id}>
-                              {des.name}
+                            <option key={destination.id} value={destination.id}>
+                              {destination.name}
                             </option>
                           );
                         })}
@@ -400,13 +271,13 @@ function Cart() {
                 <div className="card p-3 h-100">
                   <h5 className="mb-3">Giỏ hàng ({cart.products?.length})</h5>
                   {cart.products
-                    ?.sort((c1, c2) => {
-                      return c2.unitsInStock - c1.unitsInStock;
+                    ?.sort((p1, p2) => {
+                      return p2.unitsInStock - p1.unitsInStock;
                     })
-                    .map((product, index) => {
+                    .map((product) => {
                       return (
                         <div
-                          key={index}
+                          key={product.id}
                           className={`d-flex gap-3 mb-3 pb-3 border-bottom border-secondary-subtle ${
                             product.unitsInStock == 0 ? "opacity-50" : ""
                           }`}

@@ -45,7 +45,7 @@ export const updateCart = (productsInDB) => {
   let cartItem;
   let localCart = JSON.parse(localStorage.getItem("cart"));
 
-  productsInDB = productsInDB.forEach((p) => {
+  productsInDB.forEach((p) => {
     cartItem = localCart.find((c) => c.id == p.id);
     if (cartItem != null) {
       newCart.push({
