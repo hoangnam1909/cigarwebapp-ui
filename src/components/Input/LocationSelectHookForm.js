@@ -1,14 +1,23 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-function LocationSelect({ setLocation }) {
+function LocationSelectHookForm({ setValue }) {
   const [provinces, setProvinces] = useState();
   const [districts, setDistricts] = useState();
   const [wards, setWards] = useState();
 
-  const [province, setProvince] = useState();
-  const [district, setDistrict] = useState();
-  const [ward, setWard] = useState();
+  const [province, setProvince] = useState({
+    code: "0",
+    name: "",
+  });
+  const [district, setDistrict] = useState({
+    code: "0",
+    name: "",
+  });
+  const [ward, setWard] = useState({
+    code: "0",
+    name: "",
+  });
 
   const getProvinces = async () => {
     const res = await axios.get("https://provinces.open-api.vn/api/p/");
@@ -16,11 +25,13 @@ function LocationSelect({ setLocation }) {
   };
 
   useEffect(() => {
-    setLocation(
-      `${ward ? ward.name + ", " : ""}
-      ${district ? district.name + ", " : ""}
-      ${province ? province.name : ""}`
-    );
+    let address = "";
+
+    address += ward.name.length > 0 ? ward.name + ", " : "";
+    address += district.name.length > 0 ? district.name + ", " : "";
+    address += province.name.length > 0 ? province.name : "";
+
+    setValue("address", address);
   }, [province, district, ward]);
 
   useEffect(() => {
@@ -64,7 +75,6 @@ function LocationSelect({ setLocation }) {
         <select
           className="form-select"
           required
-          defaultValue={"0"}
           onChange={(e) => {
             let value = e.target.value;
             if (value != 0) {
@@ -73,20 +83,30 @@ function LocationSelect({ setLocation }) {
                 name: value.split("|")[1],
               });
             } else {
-              setProvince();
+              setProvince({
+                code: "0",
+                name: "",
+              });
             }
-            setDistrict();
-            setWard();
+            setDistrict({
+              code: "0",
+              name: "",
+            });
+            setWard({
+              code: "0",
+              name: "",
+            });
           }}
         >
           <option value="0">Chọn Tỉnh Thành</option>
-          {provinces?.map((province) => {
+          {provinces?.map((p) => {
             return (
               <option
-                key={province.code}
-                value={`${province.code}|${province.name}`}
+                key={p.code}
+                value={`${p.code}|${p.name}`}
+                selected={p.code == province.code}
               >
-                {province.name}
+                {p.name}
               </option>
             );
           })}
@@ -97,7 +117,6 @@ function LocationSelect({ setLocation }) {
         <select
           className="form-select"
           required
-          defaultValue={"0"}
           onChange={(e) => {
             let value = e.target.value;
             if (value != 0) {
@@ -106,19 +125,26 @@ function LocationSelect({ setLocation }) {
                 name: value.split("|")[1],
               });
             } else {
-              setDistrict();
+              setDistrict({
+                code: "0",
+                name: "",
+              });
             }
-            setWard();
+            setWard({
+              code: "0",
+              name: "",
+            });
           }}
         >
-          <option value="0">Chọn Quận Huyện</option>
-          {districts?.map((district) => {
+          <option selected>Chọn Quận Huyện</option>
+          {districts?.map((d) => {
             return (
               <option
-                key={district.code}
-                value={`${district.code}|${district.name}`}
+                key={d.code}
+                value={`${d.code}|${d.name}`}
+                selected={d.code == district.code}
               >
-                {district.name}
+                {d.name}
               </option>
             );
           })}
@@ -128,7 +154,6 @@ function LocationSelect({ setLocation }) {
       <div className="col-md mt-3 mt-md-2">
         <select
           className="form-select"
-          defaultValue={"0"}
           onChange={(e) => {
             let value = e.target.value;
             if (value != 0) {
@@ -137,15 +162,22 @@ function LocationSelect({ setLocation }) {
                 name: value.split("|")[1],
               });
             } else {
-              setWard();
+              setWard({
+                code: "0",
+                name: "",
+              });
             }
           }}
         >
           <option value="0">Chọn Phường Xã</option>
-          {wards?.map((ward) => {
+          {wards?.map((w) => {
             return (
-              <option key={ward.code} value={`${ward.code}|${ward.name}`}>
-                {ward.name}
+              <option
+                key={w.code}
+                value={`${w.code}|${w.name}`}
+                selected={w.code == ward.code}
+              >
+                {w.name}
               </option>
             );
           })}
@@ -155,4 +187,4 @@ function LocationSelect({ setLocation }) {
   );
 }
 
-export default LocationSelect;
+export default LocationSelectHookForm;

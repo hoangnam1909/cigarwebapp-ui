@@ -1,35 +1,34 @@
 import "./Login.css";
 
-import { useState } from "react";
 import Cookies from "js-cookie";
 import { tokenUserRole } from "~/services/AuthService";
 import { getBrowerInfo } from "~/services/BrowserInfo";
 import authAPI from "~/apis/authAPI/authAPI";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useForm } from "react-hook-form";
 
 function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm();
 
-  const handleSubmitForm = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (data) => {
     let requestBody = {
-      username: username,
-      password: password,
+      ...data,
       browserInfo: getBrowerInfo(),
     };
+    delete requestBody.rememberMe;
 
     try {
-      setIsSubmitting(true);
       const res = await authAPI.authenticate(requestBody);
       if (res.status === 200) {
         Cookies.set("accessToken", res.data.token);
         Cookies.set("refreshToken", res.data.refreshToken);
-        Cookies.set("rememberMe", rememberMe);
-        setIsSubmitting(false);
+        Cookies.set("rememberMe", data.rememberMe);
 
         if (tokenUserRole().toLowerCase() === "admin") {
           window.location.href = "/admin";
@@ -38,8 +37,10 @@ function Login() {
         }
       }
     } catch (error) {
-      setIsSubmitting(false);
       toast.error("Đăng nhập không thành công", { position: "top-center" });
+      reset({
+        password: "",
+      });
       return;
     }
   };
@@ -47,7 +48,7 @@ function Login() {
   return (
     <div className="d-flex align-items-center py-4 bg-body-tertiary vh-100">
       <main className="form-signin w-100 m-auto">
-        <form onSubmit={handleSubmitForm}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="brand-logo d-flex justify-content-center">
             <Link to={"/"}>
               <img
@@ -65,10 +66,16 @@ function Login() {
               type="text"
               className="form-control"
               placeholder="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              {...register("username", {
+                required: "Tên đăng nhập là bắt buộc!",
+              })}
             />
             <label>Tên đăng nhập</label>
+            {errors.username && (
+              <div className="form-text text-danger">
+                {errors.username.message}
+              </div>
+            )}
           </div>
 
           <div className="form-floating mb-2">
@@ -76,18 +83,23 @@ function Login() {
               type="password"
               className="form-control"
               placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              {...register("password", {
+                required: "Mật khẩu là bắt buộc!",
+              })}
             />
             <label>Mật khẩu</label>
+            {errors.password && (
+              <div className="form-text text-danger">
+                {errors.password.message}
+              </div>
+            )}
           </div>
 
-          <div className="form-check text-start my-3">
+          <div className="form-check text-start mb-3">
             <input
               className="form-check-input"
               type="checkbox"
-              checked={rememberMe}
-              onChange={() => setRememberMe(!rememberMe)}
+              {...register("rememberMe")}
             />
             <label className="form-check-label">Ghi nhớ đăng nhập</label>
           </div>

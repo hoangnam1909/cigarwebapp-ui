@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import deliveryCompanyAPI from "~/apis/deliveryCompanyAPI/deliveryCompanyAPI";
 
-function DeliveryConmpaniesSelect({ data, setData }) {
+function DeliveryConmpaniesSelect({ data, setData, register }) {
   const [deliveryCompanies, setDeliveryCompanies] = useState();
 
   const getDeliveryCompanies = async () => {
@@ -19,17 +19,24 @@ function DeliveryConmpaniesSelect({ data, setData }) {
     <>
       <select
         className="form-select"
-        value={data.deliveryCompanyId}
-        onChange={(e) => {
-          setData({
-            ...data,
-            deliveryCompanyId: e.target.value,
-          });
-        }}
+        {...register("deliveryCompanyId", {
+          valueAsNumber: true,
+        })}
+        // value={data.deliveryCompanyId}
+        // onChange={(e) => {
+        //   setData({
+        //     ...data,
+        //     deliveryCompanyId: e.target.value,
+        //   });
+        // }}
       >
         {deliveryCompanies?.map((deliveryCompany) => {
           return (
-            <option key={deliveryCompany.id} value={deliveryCompany.id}>
+            <option
+              key={deliveryCompany.id}
+              value={deliveryCompany.id}
+              selected={deliveryCompany.id == 1}
+            >
               {deliveryCompany.name}
             </option>
           );

@@ -1,5 +1,6 @@
 import queryString from "query-string";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import brandAPI from "~/apis/brandAPI/brandAPI";
@@ -13,7 +14,7 @@ import FilterText from "~/components/Filter/FilterText";
 import RemoveFilter from "~/components/Filter/RemoveFilter";
 import DeliveryConmpaniesSelect from "~/components/Form/DeliveryConmpaniesSelect";
 import OrderStatusesSelect from "~/components/Form/OrderStatusesSelect";
-import LocationSelect from "~/components/Input/LocationSelect";
+import LocationSelectHookForm from "~/components/Input/LocationSelectHookForm";
 import ArrowPagination from "~/components/Pagination/ArrowPagination";
 import adminRoutes from "~/routes/adminRoutes";
 import { toVND } from "~/utils/NumberFormatter";
@@ -25,30 +26,21 @@ function AdminAddOrder() {
   let location = useLocation();
   const [searchParams] = useSearchParams();
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
   const PAGE_SIZE = 10;
   const [productsResponse, setProductsResponse] = useState();
   const [categories, setCategories] = useState();
   const [brands, setBrands] = useState();
   const [paymentDestinations, setPaymentDestinations] = useState();
-
-  const [provinceAddress, setProvinceAddress] = useState("");
-
   const [cart, setCart] = useState([]);
-  const [orderRequest, setOrderRequest] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    deliveryAddress: "",
-    note: "",
-    paymentDestinationId: "cod",
-    orderStatusId: 2,
-    deliveryCompanyId: 1,
-  });
 
-  const initialValue = () => {
-    setOrderRequest({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setValue,
+    reset,
+  } = useForm({
+    defaultValues: {
       fullName: "",
       email: "",
       phone: "",
@@ -57,9 +49,12 @@ function AdminAddOrder() {
       paymentDestinationId: "cod",
       orderStatusId: 2,
       deliveryCompanyId: 1,
-    });
+    },
+  });
+
+  const initialValue = () => {
+    reset();
     setCart([]);
-    setProvinceAddress("");
   };
 
   const addToCart = (product) => {
@@ -138,12 +133,12 @@ function AdminAddOrder() {
   };
 
   const getCategories = async () => {
-    const res = await categoryAPI.getAdminCategories();
+    const res = await categoryAPI.getAdminCategories({ page: 0 });
     setCategories(res.data.result.content);
   };
 
   const getBrands = async () => {
-    const res = await brandAPI.getAdminBrands();
+    const res = await brandAPI.getAdminBrands({ page: 0 });
     setBrands(res.data.result.content);
   };
 
@@ -153,25 +148,21 @@ function AdminAddOrder() {
     getPaymentDestinations();
   }, []);
 
-  const handleSubmitForm = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  const onSubmit = async (data) => {
+    let deliveryAddressDetail = `${data.addressDetail}, ${data.address}`;
 
-    let requestBody = { ...orderRequest };
-    let deliveryAddressDetail = `${
-      requestBody.deliveryAddress ? requestBody.deliveryAddress + ", " : ""
-    } 
-    ${provinceAddress}`;
-
-    requestBody = {
-      ...requestBody,
-      fullName: nameNormalization(requestBody.fullName),
-      email: requestBody.email.trim(),
+    let requestBody = {
+      ...data,
+      fullName: nameNormalization(data.fullName),
+      phone: data.phone,
+      email: data.email.trim(),
       deliveryAddress: nameNormalization(deliveryAddressDetail),
       orderItems: getOrderItems(),
-      orderStatusId: parseInt(requestBody.orderStatusId),
-      deliveryCompanyId: parseInt(requestBody.deliveryCompanyId),
+      orderStatusId: parseInt(data.orderStatusId),
+      deliveryCompanyId: parseInt(data.deliveryCompanyId),
     };
+    delete requestBody.address;
+    delete requestBody.addressDetail;
 
     try {
       const res = await orderAPI.adminAddOrder(requestBody);
@@ -189,8 +180,6 @@ function AdminAddOrder() {
         }
       );
     }
-
-    setIsSubmitting(false);
   };
 
   return (
@@ -224,23 +213,26 @@ function AdminAddOrder() {
                   <div className="card-body">
                     <h5 className="mb-3 text-gray-800">Thông tin mua hàng</h5>
 
-                    <form id="add-order-form" onSubmit={handleSubmitForm}>
+                    <form id="add-order-form" onSubmit={handleSubmit(onSubmit)}>
                       <div className="row g-2">
                         <div className="col-md">
                           <div className="form-floating me-1 mb-3">
                             <input
                               type="text"
                               className="form-control"
-                              value={orderRequest.fullName}
-                              onChange={(e) => {
-                                setOrderRequest({
-                                  ...orderRequest,
-                                  fullName: e.target.value,
-                                });
-                              }}
-                              required
+                              {...register("fullName", {
+                                required: "Tên người nhận là bắt buộc!",
+                              })}
                             />
-                            <label>Người nhận hàng (*)</label>
+                            <label>
+                              Người nhận hàng{" "}
+                              <span className="text-danger">(*)</span>
+                            </label>
+                            {errors.fullName && (
+                              <div className="form-text text-danger">
+                                * {errors.fullName.message}
+                              </div>
+                            )}
                           </div>
                         </div>
 
@@ -249,18 +241,33 @@ function AdminAddOrder() {
                             <input
                               type="text"
                               className="form-control"
-                              minLength="10"
+                              {...register("phone", {
+                                required:
+                                  "Số điện thoại người nhận là bắt buộc!",
+                                pattern: {
+                                  value: /0\d{9}/,
+                                  message: "Số điện thoại không đúng định dạng",
+                                },
+                                minLength: {
+                                  value: 10,
+                                  message: "Số điện thoại là dãy 10 số",
+                                },
+                                maxLength: {
+                                  value: 10,
+                                  message: "Số điện thoại là dãy 10 số",
+                                },
+                              })}
                               maxLength="10"
-                              value={orderRequest.phone}
-                              onChange={(e) => {
-                                setOrderRequest({
-                                  ...orderRequest,
-                                  phone: e.target.value,
-                                });
-                              }}
-                              required
                             />
-                            <label>Số điện thoại (*)</label>
+                            <label>
+                              Số điện thoại{" "}
+                              <span className="text-danger">(*)</span>
+                            </label>
+                            {errors.phone && (
+                              <div className="form-text text-danger">
+                                * {errors.phone.message}
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -269,65 +276,53 @@ function AdminAddOrder() {
                         <input
                           type="email"
                           className="form-control"
-                          value={orderRequest.email}
-                          onChange={(e) => {
-                            setOrderRequest({
-                              ...orderRequest,
-                              email: e.target.value,
-                            });
-                          }}
+                          {...register("email")}
                         />
                         <label>Email</label>
                       </div>
 
-                      <LocationSelect setLocation={setProvinceAddress} />
+                      <LocationSelectHookForm setValue={setValue} />
 
                       <div className="form-floating mb-3">
                         <input
                           type="text"
                           className="form-control"
-                          value={orderRequest.deliveryAddress}
-                          onChange={(e) => {
-                            setOrderRequest({
-                              ...orderRequest,
-                              deliveryAddress: e.target.value,
-                            });
-                          }}
+                          {...register("addressDetail", {
+                            required: "Địa chỉ chi tiết là bắt buộc!",
+                          })}
                         />
-                        <label>Địa chỉ (Nhập chính xác số nhà, ngõ,...)</label>
+                        <label>
+                          Địa chỉ (Nhập chính xác số nhà, ngõ,...){" "}
+                          <span className="text-danger">(*)</span>
+                        </label>
+                        {errors.addressDetail && (
+                          <div className="form-text text-danger">
+                            * {errors.addressDetail.message}
+                          </div>
+                        )}
                       </div>
 
                       <div className="form-floating mb-3">
                         <input
                           type="text"
                           className="form-control"
-                          value={orderRequest.note}
-                          onChange={(e) => {
-                            setOrderRequest({
-                              ...orderRequest,
-                              note: e.target.value,
-                            });
-                          }}
+                          {...register("note")}
                         />
-                        <label>Ghi chú cho đơn hàng</label>
+                        <label>Ghi chú</label>
                       </div>
 
                       <div className="form-floating mb-0">
                         <select
                           className="form-select"
-                          value={orderRequest.paymentDestinationId}
-                          onChange={(e) => {
-                            let value = e.target.value;
-                            setOrderRequest({
-                              ...orderRequest,
-                              paymentDestinationId: value,
-                            });
-                          }}
+                          {...register("paymentDestinationId")}
                         >
-                          {paymentDestinations?.map((des) => {
+                          {paymentDestinations?.map((destination) => {
                             return (
-                              <option key={des.id} value={des.id}>
-                                {des.name}
+                              <option
+                                key={destination.id}
+                                value={destination.id}
+                              >
+                                {destination.name}
                               </option>
                             );
                           })}
@@ -345,20 +340,13 @@ function AdminAddOrder() {
                     <h5 className="mb-3 text-gray-800">
                       Thông tin khác về đơn hàng
                     </h5>
-
-                    <form id="add-order-form" onSubmit={handleSubmitForm}>
+                    <form id="add-order-form" onSubmit={handleSubmit(onSubmit)}>
                       <div className="form-floating mb-3">
-                        <OrderStatusesSelect
-                          data={orderRequest}
-                          setData={setOrderRequest}
-                        />
+                        <OrderStatusesSelect register={register} />
                       </div>
 
                       <div className="form-floating mb-0">
-                        <DeliveryConmpaniesSelect
-                          data={orderRequest}
-                          setData={setOrderRequest}
-                        />
+                        <DeliveryConmpaniesSelect register={register} />
                       </div>
                     </form>
                   </div>
@@ -392,11 +380,6 @@ function AdminAddOrder() {
                               }`}
                             >
                               <div className="mb-3 mb-sm-0 align-self-baseline">
-                                {/* <Link
-                                  to={`/products/${rewriteUrl(product.name)}-${
-                                    product.id
-                                  }`}
-                                > */}
                                 <img
                                   width="100"
                                   height="100"
@@ -404,15 +387,9 @@ function AdminAddOrder() {
                                   className="rounded"
                                   style={{ objectFit: "cover" }}
                                 />
-                                {/* </Link> */}
                               </div>
 
                               <div className="w-100 mb-3 mb-sm-0">
-                                {/* <Link
-                                  to={`/products/${rewriteUrl(product.name)}-${
-                                    product.id
-                                  }`}
-                                > */}
                                 <h6>{product.name}</h6>
                                 <p className="form-text my-1">
                                   <span>
@@ -427,7 +404,6 @@ function AdminAddOrder() {
                                       : toVND(product.salePrice)
                                   }`}
                                 </p>
-                                {/* </Link> */}
                               </div>
 
                               <div className="d-flex flex-column align-items-baseline">
@@ -451,14 +427,13 @@ function AdminAddOrder() {
                                   onCopy={(e) => e.preventDefault()}
                                 />
                                 <a
-                                  className="w-100 text-center"
-                                  href=""
+                                  className="w-100 text-center cursor-pointer"
                                   onClick={(e) => {
                                     e.preventDefault();
                                     deleteProduct(product.id);
                                   }}
                                 >
-                                  <i className="fa-solid fa-trash me-1"></i>Xoá
+                                  <i className="fa-solid fa-trash me-2"></i>Xoá
                                 </a>
                               </div>
                             </div>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import orderStatusAPI from "~/apis/orderStatusAPI/orderStatusAPI";
 
-function OrderStatusesSelect({ data, setData }) {
+function OrderStatusesSelect({ data, setData, register }) {
   const [orderStatuses, setOrderStatuses] = useState();
 
   const getOrderStatuses = async () => {
@@ -19,17 +19,24 @@ function OrderStatusesSelect({ data, setData }) {
     <>
       <select
         className="form-select"
-        value={data.orderStatusId}
-        onChange={(e) => {
-          setData({
-            ...data,
-            orderStatusId: e.target.value,
-          });
-        }}
+        {...register("orderStatusId", {
+          valueAsNumber: true,
+        })}
+        // value={data.orderStatusId}
+        // onChange={(e) => {
+        //   setData({
+        //     ...data,
+        //     orderStatusId: e.target.value,
+        //   });
+        // }}
       >
         {orderStatuses?.map((orderStatus) => {
           return (
-            <option key={orderStatus.id} value={orderStatus.id}>
+            <option
+              key={orderStatus.id}
+              value={orderStatus.id}
+              selected={orderStatus.id == 2}
+            >
               {orderStatus.name}
             </option>
           );

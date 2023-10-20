@@ -15,29 +15,31 @@ import { Link } from "react-router-dom";
 import { rewriteUrl } from "~/utils/UrlRewrite";
 import { toast } from "react-toastify";
 import paymentDestinationAPI from "~/apis/paymentAPI/paymentDestinationAPI";
-import LocationSelect from "~/components/Input/LocationSelect";
+import { useForm } from "react-hook-form";
+import LocationSelectHookForm from "~/components/Input/LocationSelectHookForm";
 
 function Cart() {
   document.title = "Giỏ hàng";
 
   const [order, setOrder] = useState();
-
   const [paymentDestinations, setPaymentDestinations] = useState();
-
-  const [provinceAddress, setProvinceAddress] = useState("");
-
   const [cart, setCart] = useState();
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [reloadFlag, setReloadFlag] = useState(false);
-
-  const [orderRequest, setOrderRequest] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    deliveryAddress: "",
-    note: "",
-    paymentDestinationId: "cod",
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setValue,
+    reset,
+  } = useForm({
+    defaultValues: {
+      fullName: "",
+      email: "",
+      phone: "",
+      addressDetail: "",
+      note: "",
+      paymentDestinationId: "cod",
+    },
   });
 
   const getProductsInCart = async () => {
@@ -74,26 +76,20 @@ function Cart() {
     getProductsInCart();
   }, [reloadFlag]);
 
-  const handleSubmitForm = (e) => {
-    e.preventDefault();
+  const onSubmit = async (data) => {
+    let deliveryAddressDetail = `${data.addressDetail}, ${data.address}`;
 
-    let requestBody = { ...orderRequest };
-    let deliveryAddressDetail = `${
-      requestBody.deliveryAddress ? requestBody.deliveryAddress + ", " : ""
-    } 
-    ${provinceAddress}`;
-
-    requestBody = {
-      ...requestBody,
-      fullName: nameNormalization(requestBody.fullName),
-      email: requestBody.email.trim(),
+    let requestBody = {
+      ...data,
+      fullName: nameNormalization(data.fullName),
+      email: data.email.trim(),
       deliveryAddress: nameNormalization(deliveryAddressDetail),
       orderItems: getOrderItems(),
     };
+    delete requestBody.address;
+    delete requestBody.addressDetail;
 
     const addOrder = async () => {
-      setIsSubmitting(true);
-
       try {
         const res = await orderAPI.addOrder(requestBody);
         if (res.status === 200) {
@@ -106,13 +102,12 @@ function Cart() {
             toast.error("Đặt hàng không thành công.");
             setReloadFlag(!reloadFlag);
           }
+          reset();
         }
       } catch (error) {
         toast.error("Sản phẩm bạn đặt đã hết hàng hoặc không còn khả dụng");
         setReloadFlag(!reloadFlag);
       }
-
-      setIsSubmitting(false);
     };
 
     addOrder();
@@ -135,23 +130,26 @@ function Cart() {
               <div className="col-sm-12 col-xl-7">
                 <div className="card p-3 h-100">
                   <h5 className="mb-3">THÔNG TIN MUA HÀNG</h5>
-                  <form onSubmit={handleSubmitForm}>
+                  <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="row g-2">
                       <div className="col-md">
                         <div className="form-floating me-1 mb-3">
                           <input
                             type="text"
                             className="form-control"
-                            value={orderRequest.fullName}
-                            onChange={(e) => {
-                              setOrderRequest({
-                                ...orderRequest,
-                                fullName: e.target.value,
-                              });
-                            }}
-                            required
+                            {...register("fullName", {
+                              required: "Tên người nhận là bắt buộc!",
+                            })}
                           />
-                          <label>Người nhận hàng (*)</label>
+                          <label>
+                            Người nhận hàng{" "}
+                            <span className="text-danger">(*)</span>
+                          </label>
+                          {errors.fullName && (
+                            <div className="form-text text-danger">
+                              * {errors.fullName.message}
+                            </div>
+                          )}
                         </div>
                       </div>
 
@@ -160,18 +158,32 @@ function Cart() {
                           <input
                             type="text"
                             className="form-control"
-                            minLength="10"
+                            {...register("phone", {
+                              required: "Số điện thoại người nhận là bắt buộc!",
+                              pattern: {
+                                value: /0\d{9}/,
+                                message: "Số điện thoại không đúng định dạng",
+                              },
+                              minLength: {
+                                value: 10,
+                                message: "Số điện thoại là dãy 10 số",
+                              },
+                              maxLength: {
+                                value: 10,
+                                message: "Số điện thoại là dãy 10 số",
+                              },
+                            })}
                             maxLength="10"
-                            value={orderRequest.phone}
-                            onChange={(e) => {
-                              setOrderRequest({
-                                ...orderRequest,
-                                phone: e.target.value,
-                              });
-                            }}
-                            required
                           />
-                          <label>Số điện thoại (*)</label>
+                          <label>
+                            Số điện thoại{" "}
+                            <span className="text-danger">(*)</span>
+                          </label>
+                          {errors.phone && (
+                            <div className="form-text text-danger">
+                              * {errors.phone.message}
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -180,60 +192,45 @@ function Cart() {
                       <input
                         type="email"
                         className="form-control"
-                        value={orderRequest.email}
-                        onChange={(e) => {
-                          setOrderRequest({
-                            ...orderRequest,
-                            email: e.target.value,
-                          });
-                        }}
+                        {...register("email")}
                       />
                       <label>Email</label>
                     </div>
 
-                    <LocationSelect setLocation={setProvinceAddress} />
+                    <LocationSelectHookForm setValue={setValue} />
 
                     <div className="form-floating mb-3">
                       <input
                         type="text"
                         className="form-control"
-                        value={orderRequest.deliveryAddress}
-                        onChange={(e) => {
-                          setOrderRequest({
-                            ...orderRequest,
-                            deliveryAddress: e.target.value,
-                          });
-                        }}
+                        {...register("addressDetail", {
+                          required: "Địa chỉ chi tiết là bắt buộc!",
+                        })}
                       />
-                      <label>Địa chỉ (Nhập chính xác số nhà, ngõ,...)</label>
+                      <label>
+                        Địa chỉ (Nhập chính xác số nhà, ngõ,...){" "}
+                        <span className="text-danger">(*)</span>
+                      </label>
+                      {errors.addressDetail && (
+                        <div className="form-text text-danger">
+                          * {errors.addressDetail.message}
+                        </div>
+                      )}
                     </div>
 
                     <div className="form-floating mb-3">
                       <input
                         type="text"
                         className="form-control"
-                        value={orderRequest.note}
-                        onChange={(e) => {
-                          setOrderRequest({
-                            ...orderRequest,
-                            note: e.target.value,
-                          });
-                        }}
+                        {...register("note")}
                       />
-                      <label>Ghi chú cho đơn hàng</label>
+                      <label>Ghi chú</label>
                     </div>
 
                     <div className="form-floating mb-3">
                       <select
                         className="form-select"
-                        value={orderRequest.paymentDestinationId}
-                        onChange={(e) => {
-                          let value = e.target.value;
-                          setOrderRequest({
-                            ...orderRequest,
-                            paymentDestinationId: value,
-                          });
-                        }}
+                        {...register("paymentDestinationId")}
                       >
                         {paymentDestinations?.map((destination) => {
                           return (
