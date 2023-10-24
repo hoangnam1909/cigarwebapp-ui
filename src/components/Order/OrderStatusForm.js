@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import Skeleton from "react-loading-skeleton";
+import { toast } from "react-toastify";
 import orderAPI from "~/apis/orderAPI/orderAPI";
 import orderStatusAPI from "~/apis/orderStatusAPI/orderStatusAPI";
 
@@ -20,7 +22,7 @@ export default function OrderStatusForm({ order, getOrder }) {
     getOrderStatuses();
     setRequestBody({
       ...requestBody,
-      orderStatusId: order.orderStatus.id.toString(),
+      orderStatusId: order?.orderStatus.id.toString(),
     });
   }, []);
 
@@ -31,7 +33,10 @@ export default function OrderStatusForm({ order, getOrder }) {
       setIsSubmitting(true);
       const res = await orderAPI.partialUpdateOrder(order.id, requestBody);
 
-      if (res.status === 200) getOrder();
+      if (res.status === 200) {
+        getOrder();
+        toast.success("Cập nhật tình trạng đơn hàng thành công!");
+      }
 
       setIsSubmitting(false);
     };
@@ -40,55 +45,61 @@ export default function OrderStatusForm({ order, getOrder }) {
   };
 
   return (
-    <form
-      onSubmit={handleSubmitForm}
-      className={`${order ? "" : "loading-skeleton"}`}
-    >
-      {isSubmitting ? (
-        <div
-          className="isSubmitting-border me-3 align-self-center"
-          role="status"
+    <>
+      {order ? (
+        <form
+          onSubmit={handleSubmitForm}
+          className={`${order ? "" : "loading-skeleton"}`}
         >
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      ) : null}
-
-      <select
-        className="form-select mb-3"
-        disabled={isSubmitting}
-        onChange={(e) => {
-          setRequestBody({
-            ...requestBody,
-            orderStatusId: e.target.value.toString(),
-          });
-        }}
-      >
-        {orderStatuses?.map((orderStatus) => {
-          return (
-            <option
-              key={orderStatus.id}
-              value={orderStatus.id.toString()}
-              selected={order?.orderStatus?.id == orderStatus.id}
+          {isSubmitting ? (
+            <div
+              className="isSubmitting-border me-3 align-self-center"
+              role="status"
             >
-              {orderStatus.name}
-            </option>
-          );
-        })}
-      </select>
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          ) : null}
 
-      <button
-        className="btn btn-primary w-100 py-2"
-        type="submit"
-        disabled={isSubmitting}
-      >
-        {isSubmitting ? (
-          <span
-            className="isSubmitting-border isSubmitting-border-sm me-2"
-            aria-hidden="true"
-          ></span>
-        ) : null}
-        <span role="status">Lưu</span>
-      </button>
-    </form>
+          <select
+            className="form-select mb-3"
+            disabled={isSubmitting}
+            onChange={(e) => {
+              setRequestBody({
+                ...requestBody,
+                orderStatusId: e.target.value.toString(),
+              });
+            }}
+          >
+            {orderStatuses?.map((orderStatus) => {
+              return (
+                <option
+                  key={orderStatus.id}
+                  value={orderStatus.id.toString()}
+                  selected={order?.orderStatus?.id == orderStatus.id}
+                >
+                  {orderStatus.name}
+                </option>
+              );
+            })}
+          </select>
+
+          <button
+            className="btn btn-primary w-100 py-2"
+            type="submit"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <span
+                className="isSubmitting-border isSubmitting-border-sm me-2"
+                aria-hidden="true"
+              ></span>
+            ) : null}
+            <span role="status">Lưu</span>
+          </button>
+        </form>
+      ) : (
+        <Skeleton count={2} />
+      )}
+    </>
   );
 }

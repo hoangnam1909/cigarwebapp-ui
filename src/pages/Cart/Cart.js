@@ -291,6 +291,7 @@ function Cart() {
                                 src={product.image}
                                 className="rounded"
                                 style={{ objectFit: "cover" }}
+                                alt="product-main-thumb"
                               />
                             </Link>
                           </div>
@@ -339,7 +340,7 @@ function Cart() {
                             />
                             <a
                               className="w-100 text-center"
-                              href=""
+                              href="/"
                               onClick={(e) => {
                                 e.preventDefault();
                                 deleteByProductId(product.id);
